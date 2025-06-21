@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package devvit.ui.form_builder.v1alpha;
+
+import "devvit/ui/form_builder/v1alpha/type.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/ui/form_builder/v1alpha";
+option java_package = "com.reddit.devvit.ui.form_builder.v1alpha";
+
+message FormFieldValue {
+  message ListValue {
+    // The type as configured in the corresponding FieldConfig
+    FormFieldType item_type = 1;
+
+    repeated FormFieldValue items = 2;
+  }
+
+  message SelectionValue {
+    // One or more values from the choices defined in the Selection config.
+    repeated string values = 1;
+  }
+
+  message GroupValue {
+    // Group does not have a value
+  }
+
+  // The type as configured in the corresponding FormField
+  FormFieldType field_type = 1;
+
+  // If true this value comes from a FormField that was defined as a secret
+  optional bool is_secret = 100;
+
+  oneof value {
+    // For: STRING, PARAGRAPH, IMAGE (the URL)
+    string string_value = 2;
+
+    // For: NUMBER
+    double number_value = 3;
+
+    // For: BOOLEAN
+    bool bool_value = 4;
+
+    // For: LIST
+    ListValue list_value = 5;
+
+    // For: SELECTION
+    SelectionValue selection_value = 6;
+
+    // For: GROUP
+    GroupValue group_value = 7;
+  }
+}

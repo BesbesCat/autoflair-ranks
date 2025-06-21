@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package devvit.plugin.redditapi.privatemessages;
+
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/plugin/redditapi";
+option java_package = "com.reddit.devvit.plugin.redditapi.privatemessages";
+
+message GenericPrivateMessagesRequest {
+  // fullname of a thing
+  string id = 1;
+}
+
+message ComposeRequest {
+  // the name of an existing user
+  string to = 1;
+  // a string no longer than 100 characters
+  string subject = 2;
+  // raw markdown text
+  string text = 3;
+  // subreddit name
+  string from_sr = 4; // TODO: Not required
+}
+
+message ReadAllMessagesRequest {
+  // A comma-separated list of items
+  string filter_types = 1;
+}
+
+message MessageWhereRequest {
+  // one "inbox", "unread", or "sent"
+  string where = 1;
+  // true or false
+  google.protobuf.BoolValue mark = 2;
+  // message id
+  google.protobuf.StringValue mid = 3;
+  // fullname of a thing
+  google.protobuf.StringValue after = 4;
+  // fullname of a thing
+  google.protobuf.StringValue before = 5;
+  // a positive integer (default: 0)
+  google.protobuf.Int64Value count = 6;
+  // the maximum number of items desired (default: 25, maximum: 100)
+  google.protobuf.Int64Value limit = 7;
+  // (optional) the string all
+  google.protobuf.StringValue show = 8;
+}

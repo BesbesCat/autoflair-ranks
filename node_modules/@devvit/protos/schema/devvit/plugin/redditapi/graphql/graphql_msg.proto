@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package devvit.plugin.redditapi.graphql;
+
+import "google/protobuf/struct.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/plugin/redditapi";
+option java_package = "com.reddit.devvit.plugin.redditapi.graphql";
+
+message QueryRequest {
+  // gql query string
+  string query = 1;
+  // put the variables here
+  optional google.protobuf.Struct variables = 2;
+}
+
+message PersistedQueryRequest {
+  // id of a persisted operation
+  string id = 1;
+  // put the variables here
+  optional google.protobuf.Struct variables = 2;
+  // the name of the persisted operation
+  string operation_name = 3;
+}
+
+message QueryResponse {
+  google.protobuf.Struct data = 1;
+  repeated GraphQLError errors = 2 [deprecated = true];
+  optional bool ok = 3 [deprecated = true];
+}
+
+message GraphQLError {
+  string code = 1;
+  string message = 2;
+}

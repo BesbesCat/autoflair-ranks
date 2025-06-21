@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package devvit.actor.reddit;
+
+import "devvit/reddit/post.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/actor/reddit";
+option java_package = "com.reddit.devvit.actor.reddit";
+
+message PostFilterRequest {
+  devvit.reddit.Post post = 1;
+}
+
+message Response {
+  bool accepted = 1;
+}
+
+service PostFilter {
+  rpc Filter(PostFilterRequest) returns (Response);
+}

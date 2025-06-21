@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package devvit.actor.scheduler;
+
+import "devvit/actor/scheduler/action.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/actor/scheduler";
+option java_package = "com.reddit.devvit.actor.scheduler";
+
+// Actors must implement this interface to use the Scheduler.
+// HandleScheduledAction will be called by the Scheduler at the specified time.
+service SchedulerHandler {
+  rpc HandleScheduledAction(ScheduledAction) returns (google.protobuf.Empty);
+}

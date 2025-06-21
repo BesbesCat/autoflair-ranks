@@ -1,0 +1,221 @@
+syntax = "proto3";
+
+package devvit.ui.block_kit.v1beta;
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/ui/block_kit/v1beta";
+option java_package = "com.reddit.devvit.ui.block_kit.v1beta";
+
+enum BlockType {
+  BLOCK_ROOT = 0;
+  BLOCK_STACK = 1;
+  BLOCK_TEXT = 2;
+  BLOCK_BUTTON = 3;
+  BLOCK_IMAGE = 4;
+  BLOCK_SPACER = 5;
+  BLOCK_ICON = 6;
+  BLOCK_AVATAR = 7;
+  BLOCK_FULLSNOO = 8 [deprecated = true];
+  BLOCK_ANIMATION = 9 [deprecated = true];
+
+  // elements 100+ are privileged
+  BLOCK_WEBVIEW = 100;
+}
+
+enum BlockActionType {
+  ACTION_CLICK = 0;
+
+  ACTION_WEBVIEW = 100;
+}
+
+enum BlockRenderEventType {
+  // First render of the UI on the user's device
+  RENDER_INITIAL = 0;
+
+  // Render triggered by a user action
+  RENDER_USER_ACTION = 1;
+
+  // Render triggered as the result of an effect
+  RENDER_EFFECT_EVENT = 2;
+
+  // Render a version to be cached and used before the app can respond to RENDER_INITIAL
+  RENDER_CACHED = 3;
+}
+
+enum BlockStackDirection {
+  STACK_HORIZONTAL = 0;
+  STACK_VERTICAL = 1;
+  STACK_DEPTH = 2;
+}
+
+enum BlockBorderWidth {
+  BORDER_WIDTH_NONE = 0;
+  BORDER_WIDTH_THIN = 1;
+  BORDER_WIDTH_THICK = 2;
+}
+
+enum BlockVerticalAlignment {
+  ALIGN_TOP = 0;
+  ALIGN_MIDDLE = 1;
+  ALIGN_BOTTOM = 2;
+}
+
+enum BlockHorizontalAlignment {
+  ALIGN_START = 0;
+  ALIGN_CENTER = 1;
+  ALIGN_END = 2;
+}
+
+enum BlockPadding {
+  PADDING_NONE = 0;
+  PADDING_XSMALL = 1;
+  PADDING_SMALL = 2;
+  PADDING_MEDIUM = 3;
+  PADDING_LARGE = 4;
+}
+
+enum BlockGap {
+  GAP_NONE = 0;
+  GAP_SMALL = 1;
+  GAP_MEDIUM = 2;
+  GAP_LARGE = 3;
+}
+
+enum BlockRadius {
+  RADIUS_NONE = 0;
+  RADIUS_SMALL = 1;
+  RADIUS_MEDIUM = 2;
+  RADIUS_LARGE = 3;
+  RADIUS_FULL = 100;
+}
+
+enum BlockTextSize {
+  TEXT_SIZE_MEDIUM = 0;
+  TEXT_SIZE_XSMALL = 1;
+  TEXT_SIZE_SMALL = 2;
+  TEXT_SIZE_LARGE = 3;
+  TEXT_SIZE_XLARGE = 4;
+  TEXT_SIZE_XXLARGE = 5;
+}
+
+enum BlockTextWeight {
+  TEXT_WEIGHT_REGULAR = 0;
+  TEXT_WEIGHT_BOLD = 1;
+}
+
+enum BlockTextOutline {
+  TEXT_OUTLINE_NONE = 0;
+  TEXT_OUTLINE_THIN = 1;
+  TEXT_OUTLINE_THICK = 2;
+}
+
+enum BlockTextStyle {
+  TEXT_STYLE_BODY = 0;
+  TEXT_STYLE_METADATA = 1;
+  TEXT_STYLE_HEADING = 2;
+}
+
+enum BlockButtonSize {
+  BUTTON_SIZE_MEDIUM = 0;
+  BUTTON_SIZE_SMALL = 1;
+  BUTTON_SIZE_LARGE = 2;
+}
+
+enum BlockButtonAppearance {
+  BUTTON_APPEARANCE_SECONDARY = 0;
+  BUTTON_APPEARANCE_PRIMARY = 1;
+  BUTTON_APPEARANCE_PLAIN = 2;
+  BUTTON_APPEARANCE_BORDERED = 3;
+  BUTTON_APPEARANCE_MEDIA = 4;
+  BUTTON_APPEARANCE_DESTRUCTIVE = 5;
+  BUTTON_APPEARANCE_CAUTION = 6;
+  BUTTON_APPEARANCE_SUCCESS = 7;
+}
+
+enum BlockImageResizeMode {
+  IMAGE_RESIZE_FIT = 0;
+  IMAGE_RESIZE_FILL = 1;
+  IMAGE_RESIZE_COVER = 2;
+  IMAGE_RESIZE_NONE = 3;
+  IMAGE_RESIZE_SCALE_DOWN = 4;
+}
+
+enum BlockSpacerSize {
+  SPACER_SMALL = 0;
+  SPACER_XSMALL = 1;
+  SPACER_MEDIUM = 2;
+  SPACER_LARGE = 3;
+}
+
+enum BlockSpacerShape {
+  SPACER_INVISIBLE = 0;
+  SPACER_THIN = 1;
+  SPACER_SQUARE = 2;
+}
+
+enum BlockIconSize {
+  ICON_SIZE_MEDIUM = 0;
+  ICON_SIZE_XSMALL = 1;
+  ICON_SIZE_SMALL = 2;
+  ICON_SIZE_LARGE = 3;
+}
+
+enum BlockAvatarFacing {
+  AVATAR_FACING_LEFT = 0;
+  AVATAR_FACING_RIGHT = 1;
+}
+
+enum BlockAvatarSize {
+  AVATAR_SIZE_SMALL = 0;
+  AVATAR_SIZE_XXSMALL = 1;
+  AVATAR_SIZE_XSMALL = 2;
+  AVATAR_SIZE_MEDIUM = 3;
+  AVATAR_SIZE_LARGE = 4;
+  AVATAR_SIZE_XLARGE = 5;
+  AVATAR_SIZE_XXLARGE = 6;
+  AVATAR_SIZE_XXXLARGE = 7;
+}
+
+enum BlockAvatarBackground {
+  AVATAR_BG_LIGHT = 0;
+  AVATAR_BG_DARK = 1;
+}
+
+enum BlockFullSnooSize {
+  option deprecated = true;
+  FULLSNOO_SMALL = 0;
+  FULLSNOO_XSMALL = 1;
+  FULLSNOO_MEDIUM = 2;
+  FULLSNOO_LARGE = 3;
+  FULLSNOO_XLARGE = 4;
+  FULLSNOO_XXLARGE = 5;
+}
+
+enum BlockAnimationType {
+  option deprecated = true;
+
+  ANIM_LOTTIE = 0;
+}
+
+enum BlockAnimationLoopMode {
+  option deprecated = true;
+
+  ANIM_LOOP_REPEAT = 0;
+  ANIM_LOOP_BOUNCE = 1;
+}
+
+enum BlockAnimationDirection {
+  option deprecated = true;
+
+  ANIM_DIR_FORWARD = 0;
+  ANIM_DIR_BACKWARD = 1;
+}
+
+enum BlockSizeUnit {
+  SIZE_UNIT_PERCENT = 0;
+  SIZE_UNIT_PIXELS = 1;
+}
+
+enum BlockTextOverflow {
+  TEXT_OVERFLOW_CLIP = 0;
+  TEXT_OVERFLOW_ELLIPSE = 1;
+}

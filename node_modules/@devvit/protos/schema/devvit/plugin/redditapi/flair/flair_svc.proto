@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package devvit.plugin.redditapi.flair;
+
+import "devvit/plugin/redditapi/common/common_msg.proto";
+import "devvit/plugin/redditapi/flair/flair_msg.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/plugin/redditapi";
+option java_package = "com.reddit.devvit.plugin.redditapi.flair";
+
+// FLAIR - https://www.reddit.com/dev/api#section_flair
+service Flair {
+  // https://www.reddit.com/dev/api#POST_api_clearflairtemplates
+  rpc ClearFlairTemplates(ClearFlairTemplatesRequest) returns (devvit.plugin.redditapi.common.JsonStatus) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/api/clearflairtemplates';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_SNAKE;
+    option (devvit.plugin.redditapi.common.api_client_config).enforce_json = true;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_deleteflair
+  rpc DeleteFlair(DeleteFlairRequest) returns (devvit.plugin.redditapi.common.JsonStatus) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/api/deleteflair';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_SNAKE;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_deleteflairtemplate
+  rpc DeleteFlairTemplate(DeleteFlairTemplateRequest) returns (devvit.plugin.redditapi.common.JsonStatus) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/api/deleteflairtemplate';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_SNAKE;
+    option (devvit.plugin.redditapi.common.api_client_config).enforce_json = true;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_flair
+  rpc Flair(FlairRequest) returns (devvit.plugin.redditapi.common.JsonStatus) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/api/flair';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_SNAKE;
+    option (devvit.plugin.redditapi.common.api_client_config).enforce_json = true;
+  }
+
+  // https://www.reddit.com/dev/api#PATCH_api_flair_template_order
+  // Note: Endpoint expects body as raw array of flair id's
+  rpc FlairTemplateOrder(FlairTemplateOrderRequest) returns (google.protobuf.Empty);
+
+  // https://www.reddit.com/dev/api#POST_api_flairconfig
+  rpc FlairConfig(FlairConfigRequest) returns (devvit.plugin.redditapi.common.JsonStatus) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/api/flairconfig';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_SNAKE;
+    option (devvit.plugin.redditapi.common.api_client_config).enforce_json = true;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_flaircsv
+  rpc FlairCsv(FlairCsvRequest) returns (FlairCsvResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/api/flaircsv';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_SNAKE;
+    option (devvit.plugin.redditapi.common.api_client_config).enforce_json = true;
+    option (devvit.plugin.redditapi.common.api_client_config).use_custom_response_parser = true;
+  }
+
+  // https://www.reddit.com/dev/api#GET_api_flairlist
+  rpc FlairList(FlairListRequest) returns (FlairListResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/api/flairlist.json?after={after}&before={before}&count={count}&limit={limit}&name={name}&show={show}';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_flairselector
+  rpc FlairSelector(FlairSelectorRequest) returns (FlairSelectorResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/api/flairselector?name={name}&link={link}&is_newlink={is_newlink}';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_flairtemplate_v2
+  // Note: We ignore the "v1" implementation of this method
+  // Beware: The JSON response to this endpoint is a FlairObject in camelCase, not snake_case
+  // like the other responses.
+  rpc FlairTemplate(FlairTemplateRequest) returns (FlairObject) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/api/flairtemplate_v2';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_SNAKE;
+    option (devvit.plugin.redditapi.common.api_client_config).enforce_json = true;
+  }
+
+  // https://www.reddit.com/dev/api#GET_api_link_flair_v2
+  // Note: We ignore the "v1" implementation of this method
+  rpc LinkFlair(LinkFlairRequest) returns (FlairArray) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/api/link_flair_v2';
+    option (devvit.plugin.redditapi.common.api_client_config).use_custom_response_parser = true;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_selectflair
+  rpc SelectFlair(SelectFlairRequest) returns (devvit.plugin.redditapi.common.JsonStatus) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/api/selectflair';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_SNAKE;
+    option (devvit.plugin.redditapi.common.api_client_config).enforce_json = true;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_setflairenabled
+  rpc SetFlairEnabled(SetFlairEnabledRequest) returns (devvit.plugin.redditapi.common.JsonStatus) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/api/setflairenabled';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_SNAKE;
+    option (devvit.plugin.redditapi.common.api_client_config).enforce_json = true;
+  }
+
+  // https://www.reddit.com/dev/api#GET_api_user_flair_v2
+  // Note: We ignore the "v1" implementation of this method
+  rpc UserFlair(LinkFlairRequest) returns (FlairArray) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/api/user_flair_v2';
+    option (devvit.plugin.redditapi.common.api_client_config).use_custom_response_parser = true;
+  }
+}

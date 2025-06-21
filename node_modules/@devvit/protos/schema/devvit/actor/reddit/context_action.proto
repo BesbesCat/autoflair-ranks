@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package devvit.actor.reddit;
+
+import "devvit/actor/reddit/context_type.proto";
+import "devvit/actor/user_configurable/user_configurable.proto";
+import "devvit/plugin/redditapi/common/common_msg.proto";
+import "devvit/ui/effects/v1alpha/effect.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/actor/reddit";
+option java_package = "com.reddit.devvit.actor.reddit";
+
+// Which contexts an action should be applied to
+message ContextActionAllowedContexts {
+  bool post = 1;
+  bool comment = 2;
+  bool subreddit = 3;
+}
+
+// Restrict access to specific user groups
+message ContextActionAllowedUsers {
+  // Moderator only
+  bool moderator = 1;
+  // Member of the subreddit where the Actor is installed
+  bool member = 2 [deprecated = true];
+  // Logged out users can perform this action
+  bool logged_out = 3;
+}
+
+// Filters for post actions
+message ContextActionPostFilters {
+  // If true, only display action for posts created by the app itself, otherwise for all posts
+  optional bool current_app = 1;
+}
+
+// Describes a single action provided by an Actor
+message ContextActionDescription {
+  // Dev-specified ID for this action to determine which one was called in OnAction
+  string action_id = 1;
+  // User-facing name for this action (i.e.: text in the overflow menu)
+  string name = 2;
+  // Short, user-facing secondary text to describe what this action is going to do
+  string description = 3;
+  // Flags to determine in which contexts this action should be displayed
+  ContextActionAllowedContexts contexts = 4;
+  // Flags to determine what kind of user can see this action
+  ContextActionAllowedUsers users = 5;
+  // Optional field to request user input when the action is clicked
+  devvit.actor.user_configurable.ConfigForm user_input = 6;
+  // Filters to apply to actions in post context
+  optional ContextActionPostFilters post_filters = 7;
+}
+
+message ContextActionList {
+  repeated ContextActionDescription actions = 1;
+}
+
+message ContextActionRequest {
+  // The action ID defined in ContextActionDescription
+  string action_id = 1;
+  // Which context this request is coming from
+  ContextType context = 2;
+  // The post/comment/subreddit metadata this click is associated with
+  oneof context_data {
+    // TODO: Replace with Post/Comment/Subreddit types when it's safe
+    devvit.plugin.redditapi.common.RedditObject post = 3;
+    devvit.plugin.redditapi.common.RedditObject comment = 4;
+    devvit.plugin.redditapi.common.SubredditObject subreddit = 5;
+  }
+  // If user_input is defined in ContextActionDescription, the result will be provided here
+  devvit.actor.user_configurable.ConfigForm user_input = 6;
+}
+
+message ContextActionResponse {
+  // Whether or not the action was successful.
+  // @deprecated Use effects instead
+  bool success = 1;
+  // If set, display as a popup toast to the user
+  // @deprecated Use effects instead
+  string message = 2;
+
+  repeated devvit.ui.effects.v1alpha.Effect effects = 3;
+}
+
+// Context actions are clickable entry points from various parts of Reddit,
+// such as a Post or Comment, in order to trigger additional actions
+// (perform actions on behalf of the user, display additional UI, etc.)
+service ContextAction {
+  rpc GetActions(google.protobuf.Empty) returns (ContextActionList);
+  rpc OnAction(ContextActionRequest) returns (ContextActionResponse);
+}

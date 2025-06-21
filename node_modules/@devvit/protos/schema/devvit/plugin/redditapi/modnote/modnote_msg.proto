@@ -1,0 +1,104 @@
+syntax = "proto3";
+
+package devvit.plugin.redditapi.modnote;
+
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/plugin/redditapi";
+option java_package = "com.reddit.devvit.plugin.redditapi.modnote";
+
+// Requests
+message DeleteNotesRequest {
+  // subreddit name without the r/
+  string subreddit = 1;
+  // a unique ID for the note to be deleted (should have a ModNote_ prefix)
+  string note_id = 2;
+  // account username
+  string user = 3;
+}
+
+message GetNotesRequest {
+  // subreddit name without the r/
+  string subreddit = 1;
+  // (optional) an encoded string used for pagination with mod notes
+  google.protobuf.StringValue before = 2;
+  // (optional) one of (NOTE, APPROVAL, REMOVAL, BAN, MUTE, INVITE, SPAM, CONTENT_CHANGE,
+  // MOD_ACTION, ALL), to be used for querying specific types of mod notes (default: all)
+  google.protobuf.StringValue filter = 3;
+  // (optional) the number of mod notes to return in the response payload (default: 25, max: 100)
+  google.protobuf.Int64Value limit = 4;
+  // account username
+  string user = 5;
+}
+
+message PostNotesRequest {
+  string subreddit = 1;
+  // (optional) one of (BOT_BAN, PERMA_BAN, BAN, ABUSE_WARNING, SPAM_WARNING, SPAM_WATCH, SOLID_CONTRIBUTOR, HELPFUL_USER)
+  optional string label = 2;
+  // Content of the note, should be a string with a maximum character limit of 250
+  string note = 3;
+  // (optional) a fullname of a comment or post (should have either a t1 or t3 prefix)
+  google.protobuf.StringValue reddit_id = 4;
+  // account username
+  string user = 5;
+}
+
+message RecentNotesRequest {
+  // a comma delimited list of subreddits by name (e.g. 'pics,worldnews')
+  string subreddits = 1;
+  // a comma delimited list of usernames (e.g. 'foo,bar')
+  string users = 2;
+}
+
+message PostRemovalNoteRequest {
+  // list of thing ids
+  repeated string item_ids = 1;
+  // id of a Removal Reason - you can leave this as an empty string if you don't have one
+  string reason_id = 2;
+  // the reason for removal (maximum 100 characters)
+  google.protobuf.StringValue mod_note = 3;
+}
+
+// Responses
+message ModNotesResponse {
+  repeated ModNoteObject mod_notes = 1;
+  google.protobuf.StringValue start_cursor = 2;
+  google.protobuf.StringValue end_cursor = 3;
+  google.protobuf.BoolValue has_next_page = 4;
+}
+
+message DeleteNotesResponse {
+  google.protobuf.BoolValue deleted = 1;
+}
+
+message ModNoteObject {
+  message ModActionData {
+    google.protobuf.StringValue action = 1;
+    google.protobuf.StringValue reddit_id = 2;
+    google.protobuf.StringValue details = 3;
+    google.protobuf.StringValue description = 4;
+  }
+
+  message UserNoteData {
+    google.protobuf.StringValue note = 1;
+    google.protobuf.StringValue reddit_id = 2;
+    google.protobuf.StringValue label = 3;
+  }
+
+  google.protobuf.StringValue subreddit_id = 1;
+  google.protobuf.StringValue operator_id = 2;
+  ModActionData mod_action_data = 3;
+  UserNoteData user_note_data = 4;
+  google.protobuf.StringValue subreddit = 5;
+  google.protobuf.StringValue user = 6;
+  google.protobuf.StringValue operator = 7;
+  google.protobuf.StringValue id = 8;
+  google.protobuf.StringValue user_id = 9;
+  google.protobuf.Int64Value created_at = 10;
+  google.protobuf.StringValue cursor = 11;
+  google.protobuf.StringValue type = 12;
+}
+
+message PostModNotesResponse {
+  ModNoteObject created = 1;
+}

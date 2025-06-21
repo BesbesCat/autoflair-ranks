@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package devvit.gql;
+
+import "devvit/actor/reddit/context_action.proto";
+import "devvit/runtime/bundle.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/gql";
+option java_package = "com.reddit.devvit.gql";
+
+// THESE TYPES ARE DEPRECATED.
+//
+// This file contains types for the Subreddit.devPlatformMetadata field, which is (as of 2024Q4)
+// the old way to fetch Devvit metadata for a subreddit.
+
+message SubredditContextActions {
+  option deprecated = true;
+
+  // LinkedBundle.hostname
+  string actor_hostname = 1;
+  // Return value from ContextAction.GetActions()
+  devvit.actor.reddit.ContextActionList actions = 2;
+}
+
+// The subreddit manifest. Nothing to do with gRPC-web or any other kind of
+// metadata.
+// base64-encoded in Subreddit.devPlatformMetadata
+// ([ex](https://gql.reddit.com/?queryGz=eJw1y7EKg0AMANBfKTfpct07dnOoCH5AiU2kES8JXizIcf9eF5e3vZL3aSNE9k5mfR49JGrk5BGyk31JlPFt%2BxTaEmNUuY1XKEi%2FYQWfdUsvckBwaBIn8sPODmYrf8BZ5b5kldDWWv89vSpI&operationName=)).
+message DevvitSubredditMetadata {
+  option deprecated = true;
+
+  message AppInfo {
+    // Unique identifier
+    string slug = 1;
+    // Display name
+    string name = 2;
+    // Owner user ID. Eg, `t2_1w72`.
+    string owner_id = 4;
+
+    // Owner userName (use owner_id instead)
+    reserved "owner_name";
+    reserved 3;
+  }
+
+  // List of all installed apps for the loaded Subreddit
+  repeated devvit.runtime.LinkedBundle installed_remote_apps = 1;
+  repeated SubredditContextActions context_actions = 2;
+  repeated ErrorMessage errors = 3;
+  repeated AppInfo installed_apps_info = 4;
+}
+
+message ErrorMessage {
+  string message = 1;
+}

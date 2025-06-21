@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package devvit.reddit;
+
+import "devvit/reddit/subreddit.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/reddit";
+option java_package = "com.reddit.devvit.reddit";
+
+message User {
+  google.protobuf.BoolValue accept_chats = 1;
+  google.protobuf.BoolValue accept_followers = 2;
+  google.protobuf.BoolValue accept_pms = 3;
+  google.protobuf.Int32Value awardee_karma = 4;
+  google.protobuf.Int32Value awarder_karma = 5;
+  google.protobuf.BoolValue can_create_subreddit = 6;
+  google.protobuf.BoolValue can_edit_name = 7;
+  google.protobuf.Int32Value coins = 8;
+  google.protobuf.Int32Value comment_karma = 9;
+  google.protobuf.Int32Value created = 10;
+  google.protobuf.Int32Value created_utc = 11;
+  UserFeatures features = 12;
+  google.protobuf.BoolValue force_password_reset = 13;
+  google.protobuf.Int32Value gold_creddits = 14;
+  google.protobuf.StringValue gold_expiration = 15;
+  google.protobuf.BoolValue has_android_subscription = 16;
+  google.protobuf.BoolValue has_external_account = 17;
+  google.protobuf.BoolValue has_gold_subscription = 18;
+  google.protobuf.BoolValue has_ios_subscription = 19;
+  google.protobuf.BoolValue has_mail = 20;
+  google.protobuf.BoolValue has_mod_mail = 21;
+  google.protobuf.BoolValue has_paypal_subscription = 22;
+  google.protobuf.BoolValue has_stripe_subscription = 23;
+  google.protobuf.BoolValue has_subscribed = 24;
+  google.protobuf.BoolValue has_subscribed_to_premium = 25;
+  google.protobuf.BoolValue has_verified_email = 26;
+  google.protobuf.BoolValue has_visited_new_profile = 27;
+  google.protobuf.BoolValue hide_from_robots = 28;
+  google.protobuf.StringValue icon_img = 29;
+  google.protobuf.StringValue id = 30;
+  google.protobuf.BoolValue in_beta = 31;
+  google.protobuf.BoolValue in_chat = 32;
+  google.protobuf.BoolValue in_redesign_beta = 33;
+  google.protobuf.Int32Value inbox_count = 34;
+  google.protobuf.BoolValue is_blocked = 35;
+  google.protobuf.BoolValue is_employee = 36;
+  google.protobuf.BoolValue is_friend = 37;
+  google.protobuf.BoolValue is_gold = 38;
+  google.protobuf.BoolValue is_mod = 39;
+  google.protobuf.BoolValue is_sponsor = 40;
+  google.protobuf.BoolValue is_suspended = 41;
+  google.protobuf.Int32Value link_karma = 42;
+  google.protobuf.StringValue modhash = 43;
+  google.protobuf.StringValue name = 44;
+  google.protobuf.BoolValue new_modmail_exists = 45;
+  google.protobuf.Int32Value num_friends = 46;
+  google.protobuf.BoolValue over_18 = 47;
+  google.protobuf.BoolValue password_set = 48;
+  google.protobuf.BoolValue pref_autoplay = 49;
+  google.protobuf.Int32Value pref_clickgadget = 50;
+  google.protobuf.StringValue pref_geopopular = 51;
+  google.protobuf.BoolValue pref_nightmode = 52;
+  google.protobuf.BoolValue pref_no_profanity = 53;
+  google.protobuf.BoolValue pref_show_presence = 54;
+  google.protobuf.BoolValue pref_show_snoovatar = 55;
+  google.protobuf.BoolValue pref_show_trending = 56;
+  google.protobuf.BoolValue pref_show_twitter = 57;
+  google.protobuf.BoolValue pref_top_karma_subreddits = 58;
+  google.protobuf.BoolValue pref_video_autoplay = 59;
+  google.protobuf.StringValue snoovatar_img = 60;
+  repeated google.protobuf.Int32Value snoovatar_size = 61;
+  devvit.reddit.Subreddit subreddit = 62;
+  google.protobuf.StringValue suspension_expiration_utc = 63;
+  google.protobuf.Int32Value total_karma = 64;
+  google.protobuf.BoolValue verified = 65;
+  google.protobuf.BoolValue has_phone_number = 66;
+
+  // user properties for automod invocation
+  google.protobuf.Int32Value subreddits_moderated = 100;
+  google.protobuf.BoolValue has_meta_subscription = 101;
+  google.protobuf.Int32Value meta_subscription_age = 102;
+  google.protobuf.StringValue meta_points_balance = 103;
+  google.protobuf.StringValue meta_locked_points_balance = 104;
+  google.protobuf.Int32Value comment_subreddit_karma = 105;
+  google.protobuf.Int32Value post_subreddit_karma = 106;
+
+  // PRIVATE - DO NOT SET FOR PUBLIC USE
+  google.protobuf.BoolValue marked_spam = 107;
+
+  google.protobuf.BoolValue is_subreddit_proxy_account = 108;
+}
+
+message UserFeatures {
+  message Experiment {
+    google.protobuf.Int32Value experiment_id = 1;
+    google.protobuf.StringValue owner = 2;
+    google.protobuf.StringValue variant = 3;
+  }
+
+  google.protobuf.BoolValue awards_on_streams = 1;
+  google.protobuf.BoolValue can_make_mobile_test_build_purchases = 2;
+  google.protobuf.BoolValue chat_group_rollout = 3;
+  google.protobuf.BoolValue chat_subreddit = 4;
+  google.protobuf.BoolValue chat_user_settings = 5;
+  google.protobuf.BoolValue chat = 6;
+  google.protobuf.BoolValue cookie_consent_banner = 7;
+  google.protobuf.BoolValue crosspost_notif = 8;
+  google.protobuf.BoolValue crowd_control_for_post = 9;
+  google.protobuf.BoolValue custom_feed_image = 10;
+  google.protobuf.BoolValue do_not_track = 11;
+  google.protobuf.BoolValue expensive_coins_package = 12;
+  google.protobuf.BoolValue is_email_permission_required = 13;
+  google.protobuf.BoolValue live_comments = 14;
+  google.protobuf.BoolValue live_orangereds = 15;
+  google.protobuf.BoolValue mod_awards = 16;
+  google.protobuf.BoolValue mod_service_mute_reads = 17;
+  google.protobuf.BoolValue mod_service_mute_writes = 18;
+  google.protobuf.BoolValue modlog_copyright_removal = 19;
+  Experiment mweb_nsfw_xpromo = 20;
+  google.protobuf.BoolValue mweb_xpromo_interstitial_comments_android = 21;
+  google.protobuf.BoolValue mweb_xpromo_interstitial_comments_ios = 22;
+  google.protobuf.BoolValue mweb_xpromo_modal_listing_click_daily_dismissible_android = 23;
+  google.protobuf.BoolValue mweb_xpromo_modal_listing_click_daily_dismissible_ios = 24;
+  Experiment mweb_xpromo_revamp_v2 = 25;
+  Experiment mweb_xpromo_revamp_v3 = 26;
+  google.protobuf.BoolValue noreferrer_to_noopener = 27;
+  google.protobuf.BoolValue polls_mobile = 28;
+  google.protobuf.BoolValue premium_subscriptions_table = 29;
+  google.protobuf.BoolValue promoted_trend_blanks = 30;
+  google.protobuf.BoolValue resized_styles_images = 31;
+  google.protobuf.BoolValue show_amp_link = 32;
+  google.protobuf.BoolValue show_nps_survey = 33;
+  google.protobuf.BoolValue spez_modal = 34;
+  google.protobuf.BoolValue use_pref_account_deployment = 35;
+  google.protobuf.BoolValue user_flair_migration_testing = 36;
+  google.protobuf.BoolValue webhook_config = 37;
+}

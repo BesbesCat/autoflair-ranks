@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package devvit.runtime;
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/runtime";
+option java_package = "com.reddit.devvit.runtime";
+
+message Strings {
+  repeated string values = 1;
+}

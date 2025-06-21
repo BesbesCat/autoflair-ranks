@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package devvit.plugin.redditapi.privatemessages;
+
+import "devvit/plugin/redditapi/common/common_msg.proto";
+import "devvit/plugin/redditapi/privatemessages/privatemessages_msg.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/plugin/redditapi";
+option java_package = "com.reddit.devvit.plugin.redditapi.privatemessages";
+
+// PRIVATE MESSAGES - https://www.reddit.com/dev/api#section_messages
+// Note: all endpoints require oauth
+service PrivateMessages {
+  // https://www.reddit.com/dev/api#POST_api_block
+  rpc Block(GenericPrivateMessagesRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/block';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_CAMEL;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_collapse_message
+  rpc CollapseMessage(GenericPrivateMessagesRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/collapse_message.json';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = JSON_CAMEL;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_compose
+  rpc Compose(ComposeRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/compose';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_SNAKE;
+    option (devvit.plugin.redditapi.common.api_client_config).enforce_json = true;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_del_msg
+  rpc DelMsg(GenericPrivateMessagesRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/del_msg.json';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = JSON_CAMEL;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_read_all_messages
+  rpc ReadAllMessages(ReadAllMessagesRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/read_all_messages.json';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = JSON_CAMEL;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_read_message
+  rpc ReadMessage(GenericPrivateMessagesRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/read_message.json';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = JSON_CAMEL;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_unblock_subreddit
+  rpc UnblockSubreddit(GenericPrivateMessagesRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/unblock_subreddit.json';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = JSON_CAMEL;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_uncollapse_message
+  rpc UncollapseMessage(GenericPrivateMessagesRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/uncollapse_message.json';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = JSON_CAMEL;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_unread_message
+  rpc UnreadMessage(GenericPrivateMessagesRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/unread_message.json';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = JSON_CAMEL;
+  }
+
+  // https://www.reddit.com/dev/api#GET_message_where
+  rpc MessageWhere(MessageWhereRequest) returns (devvit.plugin.redditapi.common.Listing) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/message/{where}.json?mark={mark}&mid={mid}&after={after}&before={before}&count={count}&limit={limit}&show={show}';
+  }
+}

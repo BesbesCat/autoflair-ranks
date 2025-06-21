@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package devvit.ui.toast;
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/ui/toast";
+option java_package = "com.reddit.devvit.ui.toast";
+
+enum ToastAppearance {
+  NEUTRAL = 0;
+  SUCCESS = 1;
+}
+
+message ToastLeadingElement {
+  oneof element {
+    // Icon name
+    string icon = 1;
+
+    // Emoji name
+    string emoji = 2;
+
+    // Username
+    string avatar = 3;
+  }
+}
+
+message ToastTrailingElement {
+  oneof action {
+    // Text button
+    string label = 1;
+
+    // Icon button
+    string icon = 2;
+  }
+}
+
+message Toast {
+  // Text to display on the toast
+  string text = 1;
+
+  // Additional styling based on what this toast represents
+  optional ToastAppearance appearance = 2;
+
+  // Content to display before the text
+  optional ToastLeadingElement leading_element = 3;
+
+  // Content to display after the text
+  optional ToastTrailingElement trailing_element = 4;
+}

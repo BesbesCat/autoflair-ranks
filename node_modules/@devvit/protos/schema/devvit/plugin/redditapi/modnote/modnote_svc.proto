@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package devvit.plugin.redditapi.modnote;
+
+import "devvit/plugin/redditapi/common/common_msg.proto";
+import "devvit/plugin/redditapi/modnote/modnote_msg.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/plugin/redditapi";
+option java_package = "com.reddit.devvit.plugin.redditapi.modnote";
+
+// MODNOTE - https://www.reddit.com/dev/api#section_modnote
+service ModNote {
+  // @see {@link https://www.reddit.com/dev/api#GET_api_mod_notes}
+  rpc GetNotes(GetNotesRequest) returns (ModNotesResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/notes?before={before}&filter={filter}&limit={limit}&subreddit={subreddit}&user={user}';
+  }
+
+  // @see {@link https://www.reddit.com/dev/api/#DELETE_api_mod_notes}
+  rpc DeleteNotes(DeleteNotesRequest) returns (DeleteNotesResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'DELETE';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/notes?note_id={note_id}&subreddit={subreddit}&user={user}';
+  }
+
+  // @see {@link https://www.reddit.com/dev/api#POST_api_mod_notes}
+  rpc PostNotes(PostNotesRequest) returns (PostModNotesResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/notes';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_SNAKE;
+  }
+
+  // Add a mod note for why a post or comment was removed
+  rpc PostRemovalNote(PostRemovalNoteRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/v1/modactions/removal_reasons';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = JSON_SNAKE;
+  }
+
+  // @see {@link https://www.reddit.com/dev/api#GET_api_mod_notes_recent}
+  rpc RecentNotes(RecentNotesRequest) returns (ModNotesResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/notes/recent?subreddits={subreddits}&users={users}';
+  }
+}

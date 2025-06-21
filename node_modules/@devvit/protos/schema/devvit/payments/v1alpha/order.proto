@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package devvit.payments.v1alpha;
+
+import "devvit/payments/v1alpha/common.proto";
+import "devvit/payments/v1alpha/product.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/payments";
+option java_package = "com.reddit.devvit.payments";
+
+// Order represents a purchase made by a user
+message Order {
+  // a unique identifier for the order
+  string id = 1;
+
+  // where the order is in its lifecycle
+  OrderStatus status = 2;
+
+  // when the order was created
+  google.protobuf.Timestamp created_at = 3;
+
+  // when the order was last updated
+  google.protobuf.Timestamp updated_at = 4;
+
+  // the products that were ordered
+  repeated devvit.payments.v1alpha.Product products = 5;
+
+  // whether or not the order was placed in the development sandbox or production
+  devvit.payments.v1alpha.Environment environment = 8;
+
+  // Reserved so we are compatible with internal Payment protos
+  reserved 6, 7;
+  reserved "checkout_action", "status_reason";
+
+  // user-defined metadata about the order
+  map<string, string> metadata = 1001;
+}
+
+enum OrderStatus {
+  ORDER_STATUS_UNSPECIFIED = 0;
+  ORDER_STATUS_NEW = 1;
+  ORDER_STATUS_CREATED = 2;
+  ORDER_STATUS_PAID = 3;
+  ORDER_STATUS_DELIVERED = 4;
+  ORDER_STATUS_CANCELED = 5;
+  ORDER_STATUS_REVERTED = 6;
+}

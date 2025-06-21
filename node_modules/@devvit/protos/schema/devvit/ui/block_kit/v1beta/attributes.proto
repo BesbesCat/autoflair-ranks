@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package devvit.ui.block_kit.v1beta;
+
+import "devvit/ui/block_kit/v1beta/enums.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/ui/block_kit/v1beta";
+option java_package = "com.reddit.devvit.ui.block_kit.v1beta";
+
+message BlockAlignment {
+  optional BlockVerticalAlignment vertical = 1;
+  optional BlockHorizontalAlignment horizontal = 2;
+}
+
+message BlockBorder {
+  // @deprecated use colors instead
+  optional string color = 1 [deprecated = true];
+  optional BlockBorderWidth width = 2;
+  optional BlockColor colors = 3;
+}
+
+message BlockSizes {
+  message Dimension {
+    message Value {
+      float value = 1;
+      BlockSizeUnit unit = 2;
+    }
+
+    optional Value value = 1;
+    optional Value min = 2;
+    optional Value max = 3;
+  }
+
+  optional bool grow = 1;
+
+  optional Dimension width = 2;
+
+  optional Dimension height = 3;
+}
+
+// @deprecated Use BlockSizing
+message BlockSize {
+  // Grow this element to fill any free space in the container
+  optional bool grow = 1;
+
+  // Width
+  optional float width = 2;
+
+  // Unit of the width value
+  optional BlockSizeUnit width_unit = 4;
+
+  // Height
+  optional float height = 3;
+
+  // Unit of the height value
+  optional BlockSizeUnit height_unit = 5;
+}
+
+message BlockAction {
+  BlockActionType type = 1;
+  string id = 2;
+  google.protobuf.Struct data = 3;
+}
+
+message BlockColor {
+  optional string light = 1;
+  optional string dark = 2;
+}

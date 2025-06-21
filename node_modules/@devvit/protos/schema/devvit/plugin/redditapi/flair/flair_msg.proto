@@ -1,0 +1,284 @@
+syntax = "proto3";
+
+package devvit.plugin.redditapi.flair;
+
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/plugin/redditapi";
+option java_package = "com.reddit.devvit.plugin.redditapi.flair";
+
+message ClearFlairTemplatesRequest {
+  // subreddit name without the r/ e.g. 'devvit_test'
+  string subreddit = 1;
+
+  // one of (USER_FLAIR, LINK_FLAIR)
+  string flair_type = 2;
+}
+
+message DeleteFlairRequest {
+  // subreddit name without the r/ e.g. 'devvit_test'
+  string subreddit = 1;
+
+  // a user by name
+  string name = 2;
+}
+
+message DeleteFlairTemplateRequest {
+  // subreddit name without the r/ e.g. 'devvit_test'
+  string subreddit = 1;
+
+  string flair_template_id = 2;
+}
+
+message FlairRequest {
+  // subreddit name without the r/ e.g. 'devvit_test'
+  string subreddit = 1;
+
+  // a valid subreddit image name
+  google.protobuf.StringValue css_class = 2;
+
+  // the thing id of a link e.g. t3_15bfi0
+  google.protobuf.StringValue link = 3;
+
+  // a user by name
+  google.protobuf.StringValue name = 4;
+
+  // a string no longer than 64 characters
+  google.protobuf.StringValue text = 5;
+}
+
+message FlairTemplateOrderRequest {
+  // subreddit name without the r/ e.g. 'devvit_test'
+  string subreddit = 1;
+
+  // one of (USER_FLAIR, LINK_FLAIR)
+  string flair_type = 2;
+
+  repeated string order = 3;
+}
+
+message FlairConfigRequest {
+  // subreddit name without the r/ e.g. 'devvit_test'
+  string subreddit = 1;
+
+  // is flair enabled? e.g. true/false
+  bool flair_enabled = 2;
+
+  // position of flair e.g. one of (left, right)
+  string flair_position = 3;
+
+  // a boolean value e.g. true/false
+  bool flair_self_assign_enabled = 4;
+
+  // position of link flair
+  string link_flair_position = 5;
+
+  // a boolean value e.g. true/false
+  bool link_flair_self_assign_enabled = 6;
+}
+
+message FlairCsvRequest {
+  // subreddit name without the r/ e.g. 'devvit_test'
+  string subreddit = 1;
+
+  // flair information, separated by commas
+  string flair_csv = 2;
+}
+
+message FlairListRequest {
+  // subreddit name without the r/ e.g. 'devvit_test'
+  string subreddit = 1;
+
+  // thing id e.g. t3_15bfi0
+  google.protobuf.StringValue after = 2;
+
+  // thing id e.g. t3_15bfi0
+  google.protobuf.StringValue before = 3;
+
+  // a positive integer (default: 0)
+  google.protobuf.Int64Value count = 4;
+
+  // the maximum number of items desired (default: 25, maximum: 1000)
+  google.protobuf.Int64Value limit = 5;
+
+  // a user by name
+  google.protobuf.StringValue name = 6;
+
+  // (optional) the string "all"
+  google.protobuf.StringValue show = 7;
+}
+
+message FlairSelectorRequest {
+  // subreddit name without the r/ e.g. 'devvit_test'
+  string subreddit = 1;
+
+  // is it a new link e.g. true/false
+  bool is_newlink = 2;
+
+  // the thing id of a link e.g. t3_15bfi0
+  google.protobuf.StringValue link = 3;
+
+  // a user by name
+  string name = 4;
+}
+
+message FlairTemplateRequest {
+  // subreddit name without the r/ e.g. 'devvit_test'
+  string subreddit = 1;
+
+  // one of (all, emoji, text)
+  string allowable_content = 2;
+
+  // a 6-digit rgb hex color, e.g. #AABBCC
+  string background_color = 3;
+
+  // a valid subreddit image name
+  string css_class = 4;
+
+  string flair_template_id = 5; // no-op
+
+  //  one of (USER_FLAIR, LINK_FLAIR)
+  string flair_type = 6;
+
+  // an integer between 1 and 10 (default: 10)
+  int64 max_emojis = 7;
+
+  // a boolean value
+  bool mod_only = 8;
+
+  bool override_css = 9; // no-op
+
+  // a string no longer than 64 characters
+  string text = 10;
+
+  // one of (light, dark)
+  string text_color = 11;
+
+  // is this text editable? e.g. true/false
+  bool text_editable = 12;
+}
+
+message LinkFlairRequest {
+  // subreddit name without the r/ e.g. 'devvit_test'
+  string subreddit = 1;
+}
+
+message SelectFlairRequest {
+  // subreddit name without the r/ e.g. 'devvit_test'
+  string subreddit = 1;
+
+  // a 6-digit rgb hex color, e.g. #AABBCC
+  string background_color = 2;
+
+  // a valid subreddit image name
+  string css_class = 3;
+
+  string flair_template_id = 4; // no-op
+
+  // the thing id of a link e.g. t3_15bfi0
+  string link = 5;
+
+  // a user by name
+  string name = 6;
+
+  // "all" saves attributes and returns rtjson; "only" only returns rtjson; "none" only saves attributes e.g. [all|only|none]
+  string return_rtjson = 7;
+
+  // a string no longer than 64 characters
+  string text = 8;
+
+  // one of (light, dark)
+  string text_color = 9;
+}
+
+message SetFlairEnabledRequest {
+  // subreddit name without the r/ e.g. 'devvit_test'
+  string subreddit = 1;
+
+  // is flair enabled? e.g. true/false
+  bool flair_enabled = 2;
+}
+
+message FlairObject {
+  google.protobuf.StringValue allowable_content = 1;
+  google.protobuf.StringValue text = 2;
+  google.protobuf.StringValue text_color = 3;
+  bool mod_only = 4;
+  google.protobuf.StringValue background_color = 5;
+  google.protobuf.StringValue id = 6;
+  google.protobuf.StringValue css_class = 7;
+  int64 max_emojis = 8;
+
+  // prev: repeated google.protobuf.StringValue richtext
+  reserved 9;
+
+  bool text_editable = 10;
+  bool override_css = 11;
+  google.protobuf.StringValue type = 12;
+  google.protobuf.StringValue flair_type = 13;
+  repeated FlairRichText richtext = 14;
+
+  // RichText document for flair
+  message FlairRichText {
+    // enum of element types.  e.g. emoji or text
+    google.protobuf.StringValue e = 1;
+    // text to show up in the flair, e.g. "Need Advice"
+    google.protobuf.StringValue t = 2;
+    // emoji references, e.g. ":rainbow:"
+    google.protobuf.StringValue a = 3;
+    // url string, e.g. "https://reddit.com/"
+    google.protobuf.StringValue u = 4;
+  }
+}
+
+message FlairArray {
+  repeated FlairObject flair = 1;
+}
+
+message FlairSelectorResponseOption {
+  google.protobuf.StringValue flair_css_class = 1;
+  google.protobuf.StringValue flair_template_id = 2;
+  google.protobuf.StringValue flair_text = 3;
+  google.protobuf.BoolValue flair_text_editable = 4;
+  google.protobuf.StringValue flair_position = 5;
+}
+
+message FlairSelectorResponse {
+  FlairSelectorResponseOption current = 1;
+  repeated FlairSelectorResponseOption choices = 2;
+}
+
+message UserFlair {
+  google.protobuf.StringValue flair_css_class = 1;
+  google.protobuf.StringValue user = 2;
+  google.protobuf.StringValue flair_text = 3;
+}
+
+message FlairListResponse {
+  repeated UserFlair users = 1;
+  google.protobuf.StringValue next = 2;
+  google.protobuf.StringValue prev = 3;
+}
+
+// options derived from this:
+// https://github.snooguts.net/reddit/reddit-public/blob/ec7d110c0be319e68502828a2662b86caca03a3c/r2/r2/controllers/api.py#L8531
+message FlairCsvResultError {
+  google.protobuf.StringValue css = 1;
+  google.protobuf.StringValue row = 2;
+  google.protobuf.StringValue user = 3;
+}
+
+message FlairCsvResultWarning {
+  google.protobuf.StringValue text = 1;
+}
+
+message FlairCsvResult {
+  google.protobuf.StringValue status = 1;
+  google.protobuf.BoolValue ok = 2;
+  FlairCsvResultError errors = 3;
+  FlairCsvResultWarning warnings = 4;
+}
+
+message FlairCsvResponse {
+  repeated FlairCsvResult result = 1;
+}

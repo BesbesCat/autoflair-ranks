@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package devvit.ui.effects.v1alpha;
+
+import "devvit/events/v1alpha/realtime.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/ui/effects/v1alpha";
+option java_package = "com.reddit.devvit.ui.effects.v1alpha";
+
+enum RealtimeSubscriptionStatus {
+  REALTIME_SUBSCRIBED = 0;
+  REALTIME_UNSUBSCRIBED = 1;
+}
+
+// Instruct the client to subscribe to realtime events
+message RealtimeSubscriptionsEffect {
+  // List of IDs the client should be subscribed to
+  repeated string subscription_ids = 1;
+}
+
+message RealtimeSubscriptionEvent {
+  // Event data from the subscription
+  devvit.events.v1alpha.RealtimeEvent event = 1;
+  // If set, this event signals a change in the subscription status
+  optional RealtimeSubscriptionStatus status = 2;
+}

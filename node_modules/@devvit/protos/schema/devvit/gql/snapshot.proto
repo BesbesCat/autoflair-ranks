@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package devvit.gql;
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/gql";
+option java_package = "com.reddit.devvit.gql";
+
+message CustomPostSnapshot {
+  string snapshot_id = 1;
+  string render_config = 2;
+}

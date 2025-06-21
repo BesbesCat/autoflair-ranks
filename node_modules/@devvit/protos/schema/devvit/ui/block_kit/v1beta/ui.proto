@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package devvit.ui.block_kit.v1beta;
+
+import "devvit/ui/block_kit/v1beta/block.proto";
+import "devvit/ui/common/v1alpha/common.proto";
+import "devvit/ui/effects/v1alpha/effect.proto";
+import "devvit/ui/events/v1alpha/event.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/ui/block_kit/v1beta";
+option java_package = "com.reddit.devvit.ui.block_kit.v1beta";
+
+/**
+ * This file encodes a generic protocol for rendering UIs.  If you want to embed a UI into Devvit, you should use this protocol.
+ * This protobuf is for the second iteration of Blocks components.  It's an extraction of CustomPost to work with any UI surface.
+ *
+ * The idea is that if you want to add a new surface, you can add an rpc method that takes a RenderUIRequest and returns a RenderUIResponse.
+ * This RPC method will encompass the full lifecycle of the UI.  It will be called when the UI is first rendered, and it will be called again
+ * when the user or system interacts with the UI via UIEvents.
+ *
+ * Example:
+ *
+ *    service MyService {
+ *      rpc MyNewSidebarUI(UIRequest) returns (UIResponse) {};
+ *    }
+ *
+ * There are some optimizations encoded in the protocol.  For example, if you just want a pure render, you can send a UIRequest with no events.  This
+ * will return a UIResponse with no effects and no new state.  Conversely, if you want to update state, but not render anything, you can send a UIRequest
+ * with no_render set to true.  This will return a UIResponse with effects and state updates but no new UI.
+ *
+ * The common case, however, is to send a UIRequest with events and no_render set to false.  This will perform the state updates, do a render, then return
+ * a UIResponse with a new UI, new state, and effects, and saving the multiple round-trips.
+ */
+message UIRequest {
+  // This is universally available to all UIs.  It's a place to put environment-specific data.
+  // Typical items are e.g. locale, dark mode, etc.  Please don't put surface-specific data here.
+  // (i.e. *NOT* post_id, that should be in the props.  *NOT* user_id, that should be in the state.)
+  optional UIEnvironment env = 5;
+
+  // Props to the root component of this UI.
+  optional google.protobuf.Struct props = 1;
+
+  // Stateful data received from a previous response
+  optional google.protobuf.Struct state = 2;
+
+  // This is a "repeated" so we can consider adding event batching (e.g. multiple key presses).  For
+  // now, This is zero or one events. If you just want to render a UI, you can send an empty list.
+  repeated devvit.ui.events.v1alpha.UIEvent events = 3;
+}
+
+message UIResponse {
+  // Stateful data to be sent back. Event responses only contain state deltas to
+  // allow the requester to aggregate and reconcile local and remote state. This
+  // will be sent back to you in the next request.
+  //
+  // Note that the deltas also may include "tombstones" which must be used to delete
+  // keys from the state.  This is useful for cleaning up state that is no longer needed.
+  optional google.protobuf.Struct state = 1;
+
+  // Optional list of Effects to execute on the client
+  repeated devvit.ui.effects.v1alpha.Effect effects = 2;
+
+  // Optional list of Events that will re-enter the dispatcher queue
+  repeated devvit.ui.events.v1alpha.UIEvent events = 5;
+
+  /**
+   * The rendered UI. The current preferred format is Blocks.   If you would like to render a native UI, and you feel like Blocks won't work for you, today,
+   * you can add a new set of components here inside the one-of.  Please reach out to us if you need to do this.
+   */
+  oneof ui {
+    // Render the post with Blocks
+    Block blocks = 3;
+
+    // Render a menu.  No one is using this yet, but it's here for an example.  I'd love to see this migrate.
+    // CustomAction custom_actions = 4;
+  }
+}
+
+/**
+ * This is universally available to all UIs.  It's a place to put environment-specific data.
+ * Typical items are e.g. locale, dark mode, etc.  Please don't put surface-specific data here.
+ * (i.e. *NOT* post_id, that should be in the props.  *NOT* user_id, that should be in the state.)
+ */
+message UIEnvironment {
+  // The locale of the user.  This is a string like "en-US" or "fr-CA"
+  optional string locale = 1;
+
+  // The user's preferred color scheme.  This is a string like "light" or "dark"
+  optional string color_scheme = 2;
+
+  // The layout size of the post
+  optional devvit.ui.common.v1alpha.UIDimensions dimensions = 3;
+
+  // Previous timezone of the user
+  reserved 4;
+
+  // The timezone of the user
+  optional string timezone = 5;
+}

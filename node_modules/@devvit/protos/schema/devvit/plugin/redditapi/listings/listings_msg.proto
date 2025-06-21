@@ -1,0 +1,214 @@
+syntax = "proto3";
+
+package devvit.plugin.redditapi.listings;
+
+import "devvit/plugin/redditapi/common/common_msg.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/plugin/redditapi";
+option java_package = "com.reddit.devvit.plugin.redditapi.listings";
+
+// Requests
+
+message GetBestRequest {
+  // Post thing ID
+  // Return Posts in the listing up to this Post (non-inclusive)
+  // Note: Do not use `before` and `after` in the same request
+  // @example "t3_abc123"
+  google.protobuf.StringValue after = 1;
+  // Post thing ID
+  // Return Posts in the listing starting after this Post (non-inclusive)
+  // Note: Do not use `before` and `after` in the same request
+  // @example "t3_abc123"
+  google.protobuf.StringValue before = 2;
+  // The number of items seen so far.
+  // Use when fetching subsequent pages with `before` or `after`.
+  google.protobuf.Int64Value count = 3;
+  // The maximum number of items desired (default: 25, maximum: 100)
+  google.protobuf.Int64Value limit = 4;
+  // Adding the string "all" will show all results regardless of user preferences
+  google.protobuf.StringValue show = 5;
+}
+
+message GetSortRequest {
+  // Fetch posts from this subreddit.
+  // Note: If omitted Home is used
+  // @example "AskReddit"
+  google.protobuf.StringValue subreddit = 1;
+  // Sort method
+  // One of: "top", "controversial"
+  string sort = 2;
+  // Post thing ID
+  // Return Posts in the listing up to this Post (non-inclusive)
+  // Note: Do not use `before` and `after` in the same request
+  // @example "t3_abc123"
+  google.protobuf.StringValue after = 3;
+  // Post thing ID
+  // Return Posts in the listing starting after this Post (non-inclusive)
+  // Note: Do not use `before` and `after` in the same request
+  // @example "t3_abc123"
+  google.protobuf.StringValue before = 4;
+  // One of: "num_comments", "new"
+  google.protobuf.Int64Value limit = 5;
+  // The number of items seen so far.
+  // Use when fetching subsequent pages with `before` or `after`, defaults to 0
+  google.protobuf.Int64Value count = 6;
+  // Adding the string "all" will show all results regardless of user preferences
+  google.protobuf.StringValue show = 7;
+  // Show results within the given timeframe (default: "day")
+  // One of: "hour", "day", "week", "month", "year", "all"
+  google.protobuf.StringValue t = 9;
+}
+
+message GetCommentsRequest {
+  // Post thing ID without t3_ prefix
+  // @example "abc123" // for: t3_abc123
+  string article = 1;
+  // Comment thing ID without t1_ prefix
+  // Note: If provided this will be the only sub-tree in the listing
+  // @example "def456" // for: t1_def456
+  google.protobuf.StringValue comment = 2;
+  // If `comment` is provided and is not a top-level comment include
+  // up to this amount of parent comments. Range: 0-8
+  google.protobuf.Int64Value context = 3;
+  // Maximum depth of any comment tree in the listing
+  google.protobuf.Int64Value depth = 4;
+  // Maximum comments to include in each sub-tree
+  // Note: This limit is applied to each level of the comment tree
+  google.protobuf.Int64Value limit = 5;
+  // One of: "confidence", "top", "new", "controversial", "old", "random", "qa", "live"
+  google.protobuf.StringValue sort = 6;
+  // If `false` the comment tree is flattened instead of nesting sub-trees in `replies`
+  google.protobuf.BoolValue threaded = 7;
+  // Limit the total number of comments returned to this amount. Range: 0-50
+  // Note: While `limit` sets the maximum comments per sub-tree, `truncate`
+  //       counts each comment and its descendents toward the maximum
+  google.protobuf.Int64Value truncate = 8;
+}
+
+message GetByIdRequest {
+  // Comma-separated list of Post thing IDs
+  // @example "t3_abc123,t3_def456"
+  string post_ids = 1;
+}
+
+message GetDuplicatesRequest {
+  // Post thing ID without t3_ prefix
+  // @example "abc123" // for: t3_abc123
+  string article = 1;
+  // Post thing ID
+  // Return Posts in the listing starting after this Post (non-inclusive)
+  // Note: Do not use `before` and `after` in the same request
+  // @example "t3_abc123"
+  google.protobuf.StringValue before = 2;
+  // Post thing ID
+  // Return Posts in the listing up to this Post (non-inclusive)
+  // Note: Do not use `before` and `after` in the same request
+  // @example "t3_abc123"
+  google.protobuf.StringValue after = 3;
+  // Maximum number of items to include in the response
+  google.protobuf.Int64Value limit = 4;
+  // One of: "num_comments", "new"
+  google.protobuf.StringValue sort = 5;
+  // Limit search to the given subreddit name
+  // @example "AskReddit"
+  google.protobuf.StringValue sr = 6;
+  // The number of items seen so far.
+  // Use when fetching subsequent pages with `before` or `after`.
+  google.protobuf.Int64Value count = 7;
+  // Only return duplicates that are crossposting this post
+  google.protobuf.BoolValue crossposts_only = 8;
+  // Adding the string "all" will show all results regardless of user preferences
+  google.protobuf.StringValue show = 9;
+}
+
+message GetHotRequest {
+  // Fetch posts from this subreddit.
+  // Note: If omitted Home is used
+  // @example "AskReddit"
+  google.protobuf.StringValue subreddit = 1;
+  // Post thing ID
+  // Return Posts in the listing starting after this Post (non-inclusive)
+  // Note: Do not use `before` and `after` in the same request
+  // @example "t3_abc123"
+  google.protobuf.StringValue before = 2;
+  // Post thing ID
+  // Return Posts in the listing up to this Post (non-inclusive)
+  // Note: Do not use `before` and `after` in the same request
+  // @example "t3_abc123"
+  google.protobuf.StringValue after = 3;
+  // The maximum number of items desired (default: 25, maximum: 100)
+  google.protobuf.Int64Value limit = 4;
+  // The number of items seen so far.
+  // Use when fetching subsequent pages with `before` or `after`.
+  google.protobuf.Int64Value count = 5;
+  // Adding the string "all" will show all results regardless of user preferences
+  google.protobuf.StringValue show = 6;
+  // If provided filter the results by geographic location
+  // One of: GLOBAL, US, AR, AU, BG, CA, CL, CO, HR, CZ, FI, FR,
+  //         DE, GR, HU, IS, IN, IE, IT, JP, MY, MX, NZ, PH, PL,
+  //         PT, PR, RO, RS, SG, ES, SE, TW, TH, TR, GB,
+  //         US_WA, US_DE, US_DC, US_WI, US_WV, US_HI, US_FL, US_WY,
+  //         US_NH, US_NJ, US_NM, US_TX, US_LA, US_NC, US_ND, US_NE,
+  //         US_TN, US_NY, US_PA, US_CA, US_NV, US_VA, US_CO, US_AK,
+  //         US_AL, US_AR, US_VT, US_IL, US_GA, US_IN, US_IA, US_OK,
+  //         US_AZ, US_ID, US_CT, US_ME, US_MD, US_MA, US_OH, US_UT,
+  //         US_MO, US_MN, US_MI, US_RI, US_KS, US_MT, US_MS, US_SC,
+  //         US_KY, US_OR, US_SD
+  google.protobuf.StringValue g = 7;
+}
+
+message GetNewRequest {
+  // Fetch posts from this subreddit.
+  // Note: If omitted Home is used
+  // @example "AskReddit"
+  google.protobuf.StringValue subreddit = 1;
+  // Post thing ID
+  // Return Posts in the listing starting after this Post (non-inclusive)
+  // Note: Do not use `before` and `after` in the same request
+  // @example "t3_abc123"
+  google.protobuf.StringValue before = 2;
+  // Post thing ID
+  // Return Posts in the listing up to this Post (non-inclusive)
+  // Note: Do not use `before` and `after` in the same request
+  // @example "t3_abc123"
+  google.protobuf.StringValue after = 3;
+  // The maximum number of items desired (default: 25, maximum: 100)
+  google.protobuf.Int64Value limit = 4;
+  // The number of items seen so far.
+  // Use when fetching subsequent pages with `before` or `after`.
+  google.protobuf.Int64Value count = 5;
+  // The number of items seen so far.
+  // Use when fetching subsequent pages with `before` or `after`.
+  google.protobuf.StringValue show = 6;
+}
+
+message GetRisingRequest {
+  // Fetch posts from this subreddit.
+  // Note: If omitted Home is used
+  // @example "AskReddit"
+  google.protobuf.StringValue subreddit = 1;
+  // Post thing ID
+  // Return Posts in the listing up to this Post (non-inclusive)
+  // Note: Do not use `before` and `after` in the same request
+  // @example "t3_abc123"
+  google.protobuf.StringValue after = 2;
+  // Post thing ID
+  // Return Posts in the listing starting after this Post (non-inclusive)
+  // Note: Do not use `before` and `after` in the same request
+  // @example "t3_abc123"
+  google.protobuf.StringValue before = 3;
+  // The number of items seen so far.
+  // Use when fetching subsequent pages with `before` or `after`.
+  google.protobuf.Int64Value count = 4;
+  // The maximum number of items desired (default: 25, maximum: 100)
+  google.protobuf.Int64Value limit = 5;
+  // The number of items seen so far.
+  // Use when fetching subsequent pages with `before` or `after`.
+  google.protobuf.StringValue show = 6;
+}
+
+// Responses
+message ListingResponse {
+  repeated devvit.plugin.redditapi.common.Listing listings = 1;
+}

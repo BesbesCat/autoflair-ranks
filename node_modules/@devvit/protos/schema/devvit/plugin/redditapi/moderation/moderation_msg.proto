@@ -1,0 +1,137 @@
+syntax = "proto3";
+
+package devvit.plugin.redditapi.moderation;
+
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/plugin/redditapi";
+option java_package = "com.reddit.devvit.plugin.redditapi.moderation";
+
+// Requests
+message AboutLogRequest {
+  // a modaction thing uuid
+  google.protobuf.StringValue after = 1;
+  // a modaction thing uuid
+  google.protobuf.StringValue before = 2;
+  google.protobuf.Int64Value count = 3;
+  // the maximum number of items desired (default: 25, maximum: 500)
+  google.protobuf.Int64Value limit = 4;
+  // (optional) the string all
+  google.protobuf.StringValue show = 5;
+  // (optional) a moderator filter
+  google.protobuf.StringValue mod = 6;
+  // one of (banuser, unbanuser, spamlink, removelink, approvelink, spamcomment, removecomment,
+  // approvecomment, addmoderator, showcomment, invitemoderator, uninvitemoderator,
+  // acceptmoderatorinvite, removemoderator, addcontributor, removecontributor, editsettings,
+  // editflair, distinguish, marknsfw, wikibanned, wikicontributor, wikiunbanned, wikipagelisted,
+  // removewikicontributor, wikirevise, wikipermlevel, ignorereports, unignorereports,
+  // setpermissions, setsuggestedsort, sticky, unsticky, setcontestmode, unsetcontestmode, lock,
+  // unlock, muteuser, unmuteuser, createrule, editrule, reorderrules, deleterule, spoiler,
+  // unspoiler, modmail_enrollment, community_styling, community_widgets, markoriginalcontent,
+  // collections, events, hidden_award, add_community_topics, remove_community_topics,
+  // create_scheduled_post, edit_scheduled_post, delete_scheduled_post, submit_scheduled_post,
+  // edit_post_requirements, invitesubscriber, submit_content_rating_survey,
+  // adjust_post_crowd_control_level, enable_post_crowd_control_filter,
+  // disable_post_crowd_control_filter, deleteoverriddenclassification, overrideclassification,
+  // reordermoderators, snoozereports, unsnoozereports, addnote, deletenote, addremovalreason,
+  // createremovalreason, updateremovalreason, deleteremovalreason)
+  google.protobuf.StringValue type = 8;
+  // subreddit name without the r/
+  google.protobuf.StringValue subreddit = 9;
+}
+
+message AboutLocationRequest {
+  // thing id (e.g t1_15bfi0)
+  google.protobuf.StringValue after = 1;
+  // thing id (e.g t1_15bfi0)
+  google.protobuf.StringValue before = 2;
+  google.protobuf.Int64Value count = 3;
+  // the maximum number of items desired (default: 25, maximum: 100)
+  google.protobuf.Int64Value limit = 4;
+  string location = 5;
+  // one of (links, comments, chat_comments)
+  google.protobuf.StringValue only = 6;
+  // (optional) the string all
+  google.protobuf.StringValue show = 7;
+  // subreddit name without the r/
+  string subreddit = 8;
+}
+
+message AcceptModeratorInviteRequest {
+  // subreddit name without the r/
+  string subreddit = 1;
+}
+
+message BasicModerationIdRequest {
+  string id = 1;
+}
+
+message DistinguishRequest {
+  // one of (yes, no, admin, special)
+  string how = 1;
+  // thing id (e.g t1_15bfi0)
+  string id = 2;
+  // stick the distinguished comment to the top of all comments threads
+  bool sticky = 3;
+}
+
+message RemoveRequest {
+  // thing id (e.g t1_15bfi0)
+  string id = 1;
+  // is it spam?
+  bool spam = 2; // TODO: Not required
+}
+
+message SnoozeReportsRequest {
+  // thing id (e.g t1_15bfi0)
+  string id = 1;
+  // report reason
+  string reason = 2;
+}
+
+message UpdateCrowdControlLevelRequest {
+  // thing id (e.g t1_15bfi0)
+  string id = 1;
+  // an integer between 0 and 3
+  int32 level = 2;
+}
+
+message StylesheetRequest {
+  // subreddit name without the r/
+  string subreddit = 1;
+}
+
+// Responses
+message AboutLogResponse {
+  message LogObject {
+    google.protobuf.StringValue description = 1;
+    google.protobuf.StringValue target_body = 2;
+    google.protobuf.StringValue mod_id36 = 3;
+    google.protobuf.Int64Value created_utc = 4;
+    google.protobuf.StringValue subreddit = 5;
+    google.protobuf.StringValue target_title = 6;
+    google.protobuf.StringValue target_permalink = 7;
+    google.protobuf.StringValue subreddit_name_prefixed = 8;
+    google.protobuf.StringValue details = 9;
+    google.protobuf.StringValue action = 10;
+    google.protobuf.StringValue target_author = 11;
+    google.protobuf.StringValue target_fullname = 12;
+    google.protobuf.StringValue sr_id36 = 13;
+    google.protobuf.StringValue id = 14;
+    google.protobuf.StringValue mod = 15;
+  }
+
+  message AboutLogListing {
+    message WrappedLogObject {
+      string kind = 1;
+      LogObject data = 2;
+    }
+    google.protobuf.StringValue after = 1;
+    google.protobuf.StringValue before = 2;
+    repeated WrappedLogObject children = 3;
+    google.protobuf.Int32Value dist = 4;
+  }
+
+  string kind = 1;
+  AboutLogListing data = 2;
+}

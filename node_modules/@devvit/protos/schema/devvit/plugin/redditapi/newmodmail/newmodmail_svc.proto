@@ -1,0 +1,142 @@
+syntax = "proto3";
+
+package devvit.plugin.redditapi.newmodmail;
+
+import "devvit/plugin/redditapi/common/common_msg.proto";
+import "devvit/plugin/redditapi/newmodmail/newmodmail_msg.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/plugin/redditapi";
+option java_package = "com.reddit.devvit.plugin.redditapi.newmodmail";
+
+// NEWMODMAIL - https://www.reddit.com/dev/api#section_modmail
+service NewModmail {
+  // https://www.reddit.com/dev/api#POST_api_mod_bulk_read
+  rpc BulkReadConversations(BulkReadConversationsRequest) returns (BulkReadConversationsResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations/bulk/read';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_CAMEL;
+  }
+
+  // https://www.reddit.com/dev/api#GET_api_mod_conversations
+  rpc GetConversations(GetConversationsRequest) returns (GetConversationsResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations?after={after}&entity={entity}&limit={limit}&sort={sort}&state={state}';
+    option (devvit.plugin.redditapi.common.api_client_config).use_custom_response_parser = true;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_mod_conversations
+  rpc CreateConversation(CreateConversationRequest) returns (CreateConversationResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_CAMEL;
+  }
+
+  // https://www.reddit.com/dev/api#GET_api_mod_conversations_:conversation_id
+  rpc GetConversation(GetConversationRequest) returns (GetConversationResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations/{conversation_id}?markRead={mark_read}';
+    option (devvit.plugin.redditapi.common.api_client_config).use_custom_response_parser = true;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_mod_conversations_:conversation_id
+  rpc CreateConversationMessage(CreateConversationMessageRequest) returns (CreateConversationMessageResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations/{conversation_id}';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_CAMEL;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_mod_conversations_:conversation_id_approve
+  rpc ApproveConversation(BasicConversationRequest) returns (ApproveConversationResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations/{conversation_id}/approve';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_mod_conversations_:conversation_id_archive
+  rpc ArchiveConversation(BasicConversationRequest) returns (ArchiveConversationResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations/{conversation_id}/archive';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_mod_conversations_:conversation_id_disapprove
+  rpc DisapproveConversation(BasicConversationRequest) returns (ApproveConversationResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations/{conversation_id}/disapprove';
+  }
+
+  // https://www.reddit.com/dev/api#DELETE_api_mod_conversations_:conversation_id_highlight
+  rpc UnhighlightConversation(BasicConversationRequest) returns (HighlightConversationResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'DELETE';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations/{conversation_id}/highlight';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_mod_conversations_:conversation_id_highlight
+  rpc HighlightConversation(BasicConversationRequest) returns (HighlightConversationResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations/{conversation_id}/highlight';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_mod_conversations_:conversation_id_mute
+  rpc MuteConversation(MuteConversationRequest) returns (MuteConversationResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations/{conversation_id}/mute';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_SNAKE;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_mod_conversations_:conversation_id_temp_ban
+  rpc TempBan(TempBanRequest) returns (TempBanResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations/{conversation_id}/temp_ban';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = JSON_CAMEL;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_mod_conversations_:conversation_id_unarchive
+  rpc UnarchiveConversation(BasicConversationRequest) returns (ArchiveConversationResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations/{conversation_id}/unarchive';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_mod_conversations_:conversation_id_unban
+  rpc Unban(BasicConversationRequest) returns (TempBanResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations/{conversation_id}/unban';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_mod_conversations_:conversation_id_unmute
+  rpc UnmuteConversation(BasicConversationRequest) returns (MuteConversationResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations/{conversation_id}/unmute';
+  }
+
+  // https://www.reddit.com/dev/api#GET_api_mod_conversations_:conversation_id_user
+  rpc UserConversations(BasicConversationRequest) returns (ConversationUserData) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations/{conversation_id}/user';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_mod_conversations_read
+  rpc Read(BasicConversationsRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations/read';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_CAMEL;
+  }
+
+  // https://www.reddit.com/dev/api#GET_api_mod_conversations_subreddits
+  rpc Subreddits(google.protobuf.Empty) returns (SubredditsResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations/subreddits';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_mod_conversations_unread
+  rpc Unread(BasicConversationsRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations/unread';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_CAMEL;
+  }
+
+  // https://www.reddit.com/dev/api#GET_api_mod_conversations_unread_count
+  rpc UnreadCount(google.protobuf.Empty) returns (UnreadCountResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mod/conversations/unread/count';
+  }
+}

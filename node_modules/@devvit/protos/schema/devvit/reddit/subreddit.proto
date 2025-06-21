@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package devvit.reddit;
+
+import "devvit/reddit/common.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/reddit";
+option java_package = "com.reddit.devvit.reddit";
+
+message Subreddit {
+  message PostRequirements {
+    google.protobuf.StringValue body_restriction_policy = 1;
+  }
+
+  google.protobuf.BoolValue accept_followers = 1;
+  google.protobuf.BoolValue accounts_active_is_fuzzed = 2;
+  google.protobuf.Int32Value accounts_active = 3;
+  google.protobuf.Int32Value active_user_count = 4;
+  google.protobuf.StringValue advertiser_category = 5;
+  google.protobuf.BoolValue all_original_content = 6;
+  google.protobuf.BoolValue allow_chat_post_creation = 7;
+  google.protobuf.BoolValue allow_discovery = 8;
+  google.protobuf.BoolValue allow_galleries = 9;
+  google.protobuf.BoolValue allow_images = 10;
+  google.protobuf.BoolValue allow_polls = 11;
+  google.protobuf.BoolValue allow_prediction_contributors = 12;
+  google.protobuf.BoolValue allow_predictions_tournament = 13;
+  google.protobuf.BoolValue allow_predictions = 14;
+  google.protobuf.BoolValue allow_talks = 15;
+  google.protobuf.BoolValue allow_videogifs = 16;
+  google.protobuf.BoolValue allow_videos = 17;
+  repeated google.protobuf.StringValue allowed_media_in_comments = 18;
+  google.protobuf.StringValue banner_background_color = 19;
+  google.protobuf.StringValue banner_background_image = 20;
+  google.protobuf.StringValue banner_img = 21;
+  repeated google.protobuf.Int32Value banner_size = 22;
+  google.protobuf.BoolValue can_assign_link_flair = 23;
+  google.protobuf.BoolValue can_assign_user_flair = 24;
+  google.protobuf.Int32Value coins = 25;
+  google.protobuf.BoolValue collapse_deleted_comments = 26;
+  devvit.reddit.CommentContributionSettings comment_contribution_settings = 27;
+  google.protobuf.Int32Value comment_score_hide_mins = 28;
+  google.protobuf.StringValue community_icon = 29;
+  google.protobuf.BoolValue community_reviewed = 30;
+  google.protobuf.StringValue content_category = 31;
+  google.protobuf.Int32Value created_utc = 32;
+  google.protobuf.Int32Value created = 33;
+  google.protobuf.BoolValue default_set = 34;
+  google.protobuf.StringValue description = 35;
+  google.protobuf.StringValue description_html = 36;
+  google.protobuf.BoolValue disable_contributor_requests = 37;
+  google.protobuf.StringValue display_name = 38;
+  google.protobuf.StringValue display_name_prefixed = 39;
+  repeated google.protobuf.Int32Value emojis_custom_size = 40;
+  google.protobuf.BoolValue emojis_enabled = 41;
+  google.protobuf.BoolValue free_form_reports = 42;
+  google.protobuf.BoolValue has_menu_widget = 43;
+  google.protobuf.StringValue header_img = 44;
+  repeated google.protobuf.Int32Value header_size = 45;
+  google.protobuf.StringValue header_title = 46;
+  google.protobuf.BoolValue hide_ads = 47;
+  google.protobuf.StringValue icon_color = 48;
+  google.protobuf.StringValue icon_img = 49;
+  repeated google.protobuf.Int32Value icon_size = 50;
+  google.protobuf.StringValue id = 51;
+  google.protobuf.BoolValue is_chat_post_feature_enabled = 52;
+  google.protobuf.BoolValue is_crosspostable_subreddit = 53;
+  google.protobuf.BoolValue is_default_banner = 54;
+  google.protobuf.BoolValue is_default_icon = 55;
+  google.protobuf.BoolValue is_enrolled_in_new_modmail = 56;
+  google.protobuf.StringValue key_color = 57;
+  google.protobuf.StringValue lang = 58;
+  google.protobuf.BoolValue link_flair_enabled = 59;
+  google.protobuf.StringValue link_flair_position = 60;
+  google.protobuf.StringValue mobile_banner_image = 61;
+  google.protobuf.StringValue name = 62;
+  google.protobuf.StringValue notification_level = 63;
+  google.protobuf.StringValue original_content_tag_enabled = 64;
+  google.protobuf.BoolValue over_18 = 65;
+  google.protobuf.StringValue prediction_leaderboard_entry_type = 66;
+  repeated google.protobuf.StringValue previous_names = 67;
+  google.protobuf.StringValue primary_color = 68;
+  google.protobuf.StringValue public_description = 69;
+  google.protobuf.StringValue public_description_html = 70;
+  google.protobuf.BoolValue public_traffic = 71;
+  google.protobuf.BoolValue quarantine = 72;
+  google.protobuf.BoolValue restrict_commenting = 73;
+  google.protobuf.BoolValue restrict_posting = 74;
+  google.protobuf.BoolValue should_archive_posts = 75;
+  google.protobuf.BoolValue should_show_media_in_comments_setting = 76;
+  google.protobuf.BoolValue show_media = 77;
+  google.protobuf.BoolValue show_media_preview = 78;
+  google.protobuf.BoolValue spoilers_enabled = 79;
+  google.protobuf.StringValue submission_type = 80;
+  google.protobuf.StringValue submit_link_label = 81;
+  google.protobuf.StringValue submit_text = 82;
+  google.protobuf.StringValue submit_text_html = 83;
+  google.protobuf.StringValue submit_text_label = 84;
+  google.protobuf.StringValue subreddit_type = 85;
+  google.protobuf.Int32Value subscribers = 86;
+  google.protobuf.StringValue suggested_comment_sort = 87;
+  google.protobuf.StringValue title = 88;
+  google.protobuf.StringValue url = 89;
+  google.protobuf.BoolValue user_can_flair_in_sr = 90;
+  google.protobuf.StringValue user_flair_background_color = 91;
+  google.protobuf.StringValue user_flair_css_class = 92;
+  google.protobuf.BoolValue user_flair_enabled_in_sr = 93;
+  google.protobuf.StringValue user_flair_position = 94;
+  repeated devvit.reddit.UserFlairRichtext user_flair_richtext = 95;
+  google.protobuf.StringValue user_flair_template_id = 96;
+  google.protobuf.StringValue user_flair_text = 97;
+  google.protobuf.StringValue user_flair_text_color = 98;
+  google.protobuf.StringValue user_flair_type = 99;
+  google.protobuf.BoolValue user_has_favorited = 100;
+  google.protobuf.BoolValue user_is_banned = 101;
+  google.protobuf.BoolValue user_is_contributor = 102;
+  google.protobuf.BoolValue user_is_moderator = 103;
+  reserved 104; // prev: google.protobuf.StringValue user_is_muted = 104;
+  google.protobuf.BoolValue user_is_subscriber = 105;
+  google.protobuf.BoolValue user_sr_flair_enabled = 106;
+  google.protobuf.BoolValue user_sr_theme_enabled = 107;
+  google.protobuf.Int32Value videostream_links_count = 108;
+  google.protobuf.StringValue whitelist_status = 109;
+  google.protobuf.BoolValue wiki_enabled = 110;
+  google.protobuf.Int32Value wls = 111;
+
+  // PRIVATE - DO NOT SET FOR PUBLIC USE
+  google.protobuf.BoolValue marked_spam = 112;
+
+  // previously used for post guidance
+  PostRequirements post_requirements = 113 [deprecated = true];
+
+  // If `true`, the current user may not send messages to moderators
+  bool user_is_muted = 114;
+
+  // NEXT 115
+}

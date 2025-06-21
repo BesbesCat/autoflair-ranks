@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package devvit.ui.effects.v1alpha;
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/ui/effects/v1alpha";
+option java_package = "com.reddit.devvit.ui.effects.v1alpha";
+
+// Automatically re-render UI
+message RerenderEffect {
+  // Value greater than zero to wait before calling Render again
+  optional float delay_seconds = 1;
+}

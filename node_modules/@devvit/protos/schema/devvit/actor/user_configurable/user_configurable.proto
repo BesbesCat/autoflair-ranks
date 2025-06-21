@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package devvit.actor.user_configurable;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/actor/user_configurable";
+option java_package = "com.reddit.devvit.actor.user_configurable";
+
+enum ConfigFieldType {
+  // Single-line string
+  STRING = 0;
+  // Multi-line string
+  PARAGRAPH = 1;
+  // Number input (i.e.: spinner)
+  NUMBER = 2;
+  // Checkbox, switch
+  BOOLEAN = 3;
+  // LIST, SECTION, and GROUP are not available here, so skipping 4-6
+  reserved 4 to 6;
+  // Image upload - value is a URL for the uploaded image
+  IMAGE = 7;
+}
+
+message ConfigForm {
+  repeated ConfigField fields = 1;
+}
+
+// Defines a configuration field with a specific type
+message ConfigField {
+  // Determines what kind of user input to generate for this field
+  ConfigFieldType field_type = 1;
+  // Unique identifier for the setting
+  string key = 2;
+  // Message to display to the user for this setting
+  string prompt = 3;
+  // The value of the field.
+  // When calling RenderForm provide the existing value of the field
+  // When calling HandleFormResponse read this property to get the user's response
+  string response = 4;
+}
+
+message FormResponse {
+  bool success = 1;
+  repeated string messages = 2;
+}
+
+// Enables an actor to be configurable after installation
+service UserConfigurable {
+  // Get a list of inputs to present to the user
+  rpc RenderForm(google.protobuf.Empty) returns (ConfigForm);
+  // Parse the user input.
+  // The original ConfigForm is provided with the response fields updated from the user's input.
+  rpc HandleFormResponse(ConfigForm) returns (FormResponse);
+}

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package devvit.actor.settings.v1alpha;
+
+import "devvit/actor/settings/v1alpha/shared.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/actor/settings";
+option java_package = "com.reddit.devvit.actor.settings";
+
+// Define settings configured by the user when your app is installed.
+// Installation-level settings are available to every instance of your app within a single
+// installation context.  For example, if creating a custom post app, every post will have access
+// to these settings.
+// Load the saved values with the Settings plugin.
+service InstallationSettings {
+  // Requested by the platform when rendering the configure form upon installing this app
+  rpc GetSettingsFields(GetFieldsRequest) returns (GetFieldsResponse);
+
+  // Called by the installation form before saving settings to allow for more advanced field validation
+  rpc ValidateForm(ValidateFormRequest) returns (ValidateFormResponse);
+}

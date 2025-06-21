@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package devvit.reddit.custom_actions.v2alpha;
+
+import "devvit/reddit/thing_type.proto";
+import "devvit/ui/effects/v1alpha/effect.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/reddit/custom_actions/v2alpha";
+option java_package = "com.reddit.devvit.reddit.custom_actions.v2alpha";
+
+message CustomAction {
+  message Menus {
+    optional bool subreddit = 1;
+    optional bool post = 2;
+    optional bool comment = 3;
+  }
+
+  message Options {
+    // If true, add to the mod tools menu and only allow a moderator to run the action
+    optional bool mod_tool = 1;
+
+    // Icon to show next to the label in the menu
+    optional string icon = 2;
+  }
+
+  // Unique ID for this action
+  string action_id = 1;
+
+  // Text to display on the menu item
+  string label = 2;
+
+  // Short description for what the action will do
+  string short_description = 3;
+
+  // Which menus should get this action
+  Menus menus = 4;
+
+  // Additional parameters to control where the action goes
+  optional Options options = 5;
+}
+
+message GetActionsRequest {}
+
+message GetActionsResponse {
+  // List of actions provided by this actor
+  repeated CustomAction actions = 1;
+}
+
+message OnActionRequest {
+  // Matches the action_id in the action description
+  string action_id = 1;
+
+  // The type of menu from which the action was executed
+  ThingType thing_type = 2;
+
+  // The source Thing ID from which the action was executed
+  string thing_id = 3;
+}
+
+message OnActionResponse {
+  // Stateful data to send back to your app with events
+  optional google.protobuf.Struct state = 1;
+
+  // Optional list of Effects to execute on the client
+  repeated devvit.ui.effects.v1alpha.Effect effects = 2;
+}
+
+service CustomActions {
+  rpc GetActions(GetActionsRequest) returns (GetActionsResponse);
+
+  rpc OnAction(OnActionRequest) returns (OnActionResponse);
+}

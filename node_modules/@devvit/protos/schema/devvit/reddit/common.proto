@@ -1,0 +1,104 @@
+syntax = "proto3";
+
+package devvit.reddit;
+
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/reddit";
+option java_package = "com.reddit.devvit.reddit";
+
+message AuthorFlairRichText {
+  google.protobuf.StringValue e = 1;
+  google.protobuf.StringValue t = 2;
+}
+
+// https://github.snooguts.net/reddit/reddit-service-award/blob/f102a254636cd403627cc1125fcccab52972ea6b/award/models/award.py
+message Awarding {
+  message Icon {
+    google.protobuf.Int32Value height = 1;
+    google.protobuf.StringValue url = 2;
+    google.protobuf.Int32Value width = 3;
+  }
+
+  google.protobuf.StringValue award_sub_type = 1;
+  google.protobuf.StringValue award_type = 2;
+  google.protobuf.Int32Value awardings_required_to_grant_benefits = 3;
+  google.protobuf.Int64Value coin_price = 4;
+  google.protobuf.Int64Value coin_reward = 5;
+  google.protobuf.Int32Value count = 6;
+  google.protobuf.Int32Value days_of_drip_extension = 7;
+  google.protobuf.Int32Value days_of_premium = 8;
+  google.protobuf.StringValue description = 9;
+  google.protobuf.StringValue end_date = 10;
+  google.protobuf.Int32Value giver_coin_reward = 11;
+  google.protobuf.StringValue icon_format = 12;
+  google.protobuf.Int32Value icon_height = 13;
+  google.protobuf.StringValue icon_url = 14;
+  google.protobuf.Int32Value icon_width = 15;
+  google.protobuf.StringValue id = 16;
+  google.protobuf.BoolValue is_enabled = 17;
+  google.protobuf.BoolValue is_new = 18;
+  google.protobuf.StringValue name = 19;
+  google.protobuf.Int32Value penny_donate = 20;
+  google.protobuf.Int32Value penny_price = 21;
+  repeated Icon resized_icons = 22;
+  repeated Icon resized_static_icons = 23;
+  google.protobuf.StringValue start_date = 24;
+  google.protobuf.Int32Value static_icon_height = 25;
+  google.protobuf.StringValue static_icon_url = 26;
+  google.protobuf.Int32Value static_icon_width = 27;
+  google.protobuf.Int64Value sticky_duration_seconds = 28;
+  google.protobuf.Int64Value subreddit_coin_reward = 29;
+  google.protobuf.StringValue subreddit_id = 30;
+  google.protobuf.StringValue tiers_by_required_awardings = 31;
+}
+
+message CommentContributionSettings {
+  repeated google.protobuf.StringValue allowed_media_types = 1;
+}
+
+message Gildings {
+  google.protobuf.Int32Value gid_1 = 1;
+  google.protobuf.Int32Value gid_2 = 2;
+  google.protobuf.Int32Value gid_3 = 3;
+}
+
+message MediaEmbed {
+  google.protobuf.StringValue content = 1;
+  google.protobuf.Int32Value width = 2;
+  google.protobuf.Int32Value height = 3;
+  google.protobuf.BoolValue sandbox = 4;
+  google.protobuf.BoolValue scrolling = 5;
+  google.protobuf.StringValue public_thumbnail_url = 6;
+}
+
+message UserFlairRichtext {
+  google.protobuf.StringValue e = 1;
+  google.protobuf.StringValue t = 2;
+}
+
+message BanInfo {
+  enum BanInfoAction {
+    UNKNOWN = 0;
+    SPAM = 1;
+    FILTER = 2;
+    REMOVE = 3;
+  }
+
+  google.protobuf.BoolValue auto = 1;
+  google.protobuf.Int32Value banned_at = 2;
+  google.protobuf.StringValue banner = 3;
+  google.protobuf.BoolValue moderator_banned = 4;
+  google.protobuf.StringValue note = 5;
+  google.protobuf.StringValue unbanner = 6;
+  google.protobuf.Int32Value unbanned_at = 7;
+  google.protobuf.BoolValue reset_used = 8;
+  google.protobuf.StringValue reason_id = 9;
+  google.protobuf.StringValue reason_title = 10;
+  google.protobuf.StringValue reason_message = 11;
+  google.protobuf.StringValue reason_by = 12;
+  google.protobuf.StringValue mod_note = 13;
+  google.protobuf.BoolValue ban_all_triggered = 14;
+  google.protobuf.StringValue subreddit_message = 15;
+  BanInfoAction remove_action = 16;
+}

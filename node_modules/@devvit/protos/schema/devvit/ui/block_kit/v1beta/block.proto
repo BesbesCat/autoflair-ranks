@@ -1,0 +1,212 @@
+syntax = "proto3";
+
+package devvit.ui.block_kit.v1beta;
+
+import "devvit/ui/block_kit/v1beta/attributes.proto";
+import "devvit/ui/block_kit/v1beta/enums.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/ui/block_kit/v1beta";
+option java_package = "com.reddit.devvit.ui.block_kit.v1beta";
+
+message Block {
+  BlockType type = 1;
+
+  // @deprecated Use sizes instead
+  // Common attributes
+  optional BlockSize size = 2 [deprecated = true];
+
+  // Size constraints
+  optional BlockSizes sizes = 5;
+
+  // Block-specific config
+  BlockConfig config = 3;
+
+  // List of possible actions
+  repeated BlockAction actions = 4;
+
+  /**
+   * Unique identifier for the block, if we have one.  This is designed to
+   * facilitate component re-use.
+   *
+   * If this is not set, the block is considered to be a new instance of a
+   * component, or the client may use heuristics to determine if the component
+   * appears similar enough to reuse.
+   */
+  optional string id = 6;
+
+  /**
+   * Key for the block, if we have one.  This is designed to handle
+   * component re-ordering within a list or parent.
+   *
+   * Keys are not required to be unique, but they should be stable across
+   * re-orderings of the same list or parent.
+   */
+  optional string key = 7;
+}
+
+message BlockConfig {
+  message Root {
+    repeated Block children = 1;
+    // Height of the UI
+    int32 height = 2;
+  }
+
+  message Stack {
+    // How blocks should be laid out in this stack
+    BlockStackDirection direction = 1;
+
+    // Blocks to layout in the stack
+    repeated Block children = 2;
+
+    // Stack the child blocks in reverse order
+    optional bool reverse = 3;
+
+    // Horizontal and vertical alignment of elements within the stack
+    optional BlockAlignment alignment = 4;
+
+    // Distance between child elements and the container border
+    optional BlockPadding padding = 5;
+
+    // Distance between child elements
+    optional BlockGap gap = 6;
+
+    // Display a border around the stack
+    optional BlockBorder border = 7;
+
+    // Round the corners of the stack
+    optional BlockRadius corner_radius = 8;
+
+    // Set a custom background color for the stack
+    // @deprecated Use background_colors instead
+    optional string background_color = 9 [deprecated = true];
+
+    // Set a custom background color for the stack
+    optional BlockColor background_colors = 10;
+  }
+
+  message Text {
+    string text = 1;
+    optional BlockTextSize size = 2;
+    optional BlockTextWeight weight = 3;
+    // @deprecated use colors instead
+    optional string color = 4 [deprecated = true];
+    optional BlockAlignment alignment = 5;
+    optional BlockTextOutline outline = 6;
+    optional BlockTextStyle style = 7;
+    optional bool selectable = 8;
+    optional BlockColor colors = 9;
+    optional bool wrap = 10;
+    optional BlockTextOverflow overflow = 11;
+  }
+
+  message Button {
+    optional string text = 1;
+    optional string icon = 2;
+    optional BlockButtonSize button_size = 3;
+    optional BlockButtonAppearance button_appearance = 4;
+    // @deprecated use text_colors instead
+    optional string text_color = 5 [deprecated = true];
+    // @deprecated use background_colors instead
+    optional string background_color = 6 [deprecated = true];
+    optional bool disabled = 7;
+    optional BlockColor text_colors = 8;
+    optional BlockColor background_colors = 9;
+  }
+
+  message Image {
+    // URL to the image
+    string url = 1;
+
+    // Target width, in pixels
+    int32 width = 2;
+
+    // Target height, in pixels
+    int32 height = 3;
+
+    // Description for accessibility
+    optional string description = 4;
+
+    // How to resize the image if the target resolution can't be achieved
+    optional BlockImageResizeMode resize_mode = 5;
+  }
+
+  message Spacer {
+    optional BlockSpacerSize size = 1;
+    optional BlockSpacerShape shape = 2;
+  }
+
+  message Icon {
+    string icon = 1;
+    // @deprecated use colors instead
+    optional string color = 2 [deprecated = true];
+    optional BlockIconSize size = 3;
+    optional BlockColor colors = 4;
+  }
+
+  message Avatar {
+    string thing_id = 1;
+    optional BlockAvatarFacing facing = 2;
+    optional BlockAvatarSize size = 3;
+    optional BlockAvatarBackground background = 4;
+  }
+
+  message FullSnoo {
+    option deprecated = true;
+    string user_id = 1;
+    optional BlockAvatarFacing facing = 2;
+    optional BlockFullSnooSize size = 3;
+  }
+
+  message Animation {
+    // URL to the animation
+    string url = 1;
+
+    // Target width, in pixels
+    int32 width = 2;
+
+    // Target height, in pixels
+    int32 height = 3;
+
+    // Type of player needed
+    BlockAnimationType type = 4;
+
+    // Set loop mode. Defaults to true.
+    optional bool loop = 5;
+
+    // How looping should occur
+    optional BlockAnimationLoopMode loop_mode = 6;
+
+    // Autoplay the animation as soon as it's loaded
+    optional bool autoplay = 7;
+
+    // Playback speed multiplier, when supported by type
+    optional float speed = 8;
+
+    // Play the animation forward or backward, when supported by type
+    optional BlockAnimationDirection direction = 9;
+  }
+
+  message WebView {
+    // URL to load in the webview
+    string url = 1;
+
+    // State to pass in to the webview
+    google.protobuf.Struct state = 2;
+  }
+
+  oneof config {
+    Root root_config = 1;
+    Stack stack_config = 2;
+    Text text_config = 3;
+    Button button_config = 4;
+    Image image_config = 5;
+    Spacer spacer_config = 6;
+    Icon icon_config = 7;
+    Avatar avatar_config = 8;
+    FullSnoo fullsnoo_config = 9;
+    Animation animation_config = 10;
+
+    WebView webview_config = 100;
+  }
+}

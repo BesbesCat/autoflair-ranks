@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package devvit.runtime;
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/runtime";
+option java_package = "com.reddit.devvit.runtime";
+
+// A Definition subset representable as JSON.
+message SerializableServiceDefinition {
+  // No slashes. Eg, "devvit.plugin.logger.Logger".
+  string full_name = 1;
+  repeated SerializableMethodDefinition methods = 2;
+  // Eg, "Logger".
+  string name = 3;
+  string version = 4;
+}
+
+// A MethodDefinition subset representable as JSON.
+message SerializableMethodDefinition {
+  // Leading slash. Eg, "/devvit.plugin.logger.Logger/Log".
+  string full_name = 1;
+  // Eg, "Log".
+  string name = 2;
+  bool request_stream = 3;
+  bool response_stream = 4;
+  string request_type = 5;
+  string response_type = 6;
+}
