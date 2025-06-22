@@ -50,10 +50,10 @@ Devvit.addTrigger({
       try {
         ranks = JSON.parse(ranksList);
       } catch (e) {
-
+        return;
       }
 
-      console.log(`Trigger fired for user: ${user} in subreddit: ${subreddit} with current flair ${userFlairText} ${flairCssClass}`);
+      console.log(`${subreddit}: Trigger fired for user: ${user} in with current flair: ${userFlairText} CSS: ${flairCssClass}`);
 
       const commentsListing = await context.reddit.getCommentsByUser({ username: user, limit: 10000, timeframe: 'all' });
       const comments = await commentsListing.all();
@@ -91,7 +91,7 @@ Devvit.addTrigger({
         cssClass: flairCssClass
       }
       
-      console.log(`Karma ${totalKarma} with flair: ${flairText}`);
+      console.log(`${subreddit}: Karma ${totalKarma} with flair: ${flairText}`);
 
       await context.reddit.setUserFlair(flair);    
     }
@@ -110,7 +110,7 @@ Devvit.addSettings([
   {
     type: 'boolean',
     name: 'enable-community-karma',
-    label: 'Enable community karma',
+    label: 'Use vote karma (When enabled rank will be calculated based on vote karma)',
   },
   {
     type: 'paragraph',
