@@ -111,7 +111,9 @@ Devvit.addTrigger({
       const response = await subredditId.getUserFlair({usernames: [user]});
       const userFlairText = response.users[0].flairText ?? '';
       const flairCssClass = response.users[0].flairCssClass ?? '';
-      let flairText = getRank(ranks, totalKarma);
+
+      let newrank = getRank(ranks, totalKarma);
+      let flairText = newrank;
 
       if(userFlairText) {
         flairText = flairText + ' ' + removeRanksFromFlair(ranks, userFlairText);
@@ -135,7 +137,7 @@ Devvit.addTrigger({
         const placeholders = {
           subreddit: subreddit,
           karma: totalKarma,
-          rank: flairText.replace(/:/g,''),
+          rank: newrank.replace(/:/g,''),
           user: user
         };
 
