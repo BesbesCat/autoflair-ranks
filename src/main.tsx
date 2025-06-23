@@ -36,16 +36,36 @@ function getRank(ranks: { [key: string]: number }, totalKarma: number): string {
 }
 
 Devvit.addTrigger({
-  events: ['PostSubmit', 'PostDelete', 'CommentDelete', 'CommentSubmit'], 
+  events: ['PostSubmit', 'PostDelete', 'CommentDelete', 'CommentSubmit', 'PostFlairUpdate'], 
   onEvent: async (event, context) => {
     const subreddit = await context.reddit.getCurrentSubredditName();
+    const subredditId = await context.reddit.getSubredditByName(subreddit);
+
     if (event.author) {
       const user = event.author.name;
-      const subredditId = await context.reddit.getSubredditByName(subreddit);
+      const useroObj = await context.reddit.getUserByUsername(user);
+      let permissions = [];
+      if(useroObj) {
+        permissions = await useroObj.getModPermissionsForSubreddit(subreddit);
+      }
+
       const response = await subredditId.getUserFlair({usernames: [user]});
       const userFlairText = response.users[0].flairText ?? '';
       const flairCssClass = response.users[0].flairCssClass ?? '';
-      const ranksList = await context.settings.get<string>('ranks-list');
+      let ranksList = await context.settings.get<string>('ranks-list');
+
+      if (permissions.length > 0) {
+        const excludeMods = await context.settings.get<boolean>('exclude-mods');
+        if(excludeMods == true) {
+          return;
+        } else {
+          const modrank = await context.settings.get<string>('mod-rank');
+          if(modrank) {
+            ranksList = '{"'+modrank+'": 0}'
+          }
+        }
+      }
+
       let ranks, colors;
       try {
         ranks = JSON.parse(ranksList);
@@ -53,13 +73,14 @@ Devvit.addTrigger({
         return;
       }
 
+
       console.log(`${subreddit}: Trigger fired for user: ${user} in with current flair: ${userFlairText} CSS: ${flairCssClass}`);
 
       const commentsListing = await context.reddit.getCommentsByUser({ username: user, limit: 10000, timeframe: 'all' });
       const comments = await commentsListing.all();
       const postsListing = await context.reddit.getPostsByUser({ username: user, limit: 10000, timeframe: 'all' });
       const posts = await postsListing.all();
-      
+
       let totalKarma = 0;
       const enableCommunityKarma = await context.settings.get<boolean>('enable-community-karma');
       for (const item of comments) {
@@ -82,6 +103,9 @@ Devvit.addTrigger({
 
       if(userFlairText) {
         flairText = flairText + ' ' + removeRanksFromFlair(ranks, userFlairText);
+        if(flairText === userFlairText) {
+          return;
+        }
       }
 
       let flair = {
@@ -91,7 +115,7 @@ Devvit.addTrigger({
         cssClass: flairCssClass
       }
       
-      console.log(`${subreddit}: Karma ${totalKarma} with flair: ${flairText}`);
+      console.log(`${subreddit}: User: ${user} has karma: ${totalKarma} and flair: ${flairText}`);
 
       await context.reddit.setUserFlair(flair);    
     }
@@ -110,11 +134,25 @@ Devvit.addSettings([
   {
     type: 'boolean',
     name: 'enable-community-karma',
-    label: 'Use vote karma (When enabled rank will be calculated based on vote karma)',
+    label: 'Only count upvotes/downvotes',
+    helpText: 'When enabled ranks will be calculated excluding initial upvote',
   },
   {
     type: 'paragraph',
     name: 'ranks-list',
-    label: 'Ranks list (enter as JSON, e.g. {"rank1": 0, "rank2": 1})',
+    label: 'Ranks list',
+    helpText: 'Eenter as JSON, e.g. {"rank1": 0, "rank2": 1}',
+  },
+  {
+    type: 'boolean',
+    name: 'exclude-mods',
+    label: 'Exclude moderators',
+    helpText: 'When enabled all subreddit moderators will be excluded from ranking and can set their own rank manually',
+  },
+  {
+    type: 'string',
+    name: 'mod-rank',
+    label: 'Moderator rank',
+    helpText: 'If set all subreddit moderators will persistently get this rank',
   },
 ]);
