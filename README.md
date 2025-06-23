@@ -19,6 +19,12 @@ Ranks are defined in JSON format. Make sure you enter a valid JSON as following:
 
 Where key is the string to be added to user's flair and value is it's corresponding karma score.
 
+**Level Up Message Subject:**
+Subject of an automated notification message on level-up. [Supported variables: ${user}, ${rank}, ${subreddit} and ${karma}]
+
+**Level Up Message Body:**
+Body of an automated notification message on level-up. [Supported variables: ${user}, ${rank}, ${subreddit} and ${karma}]
+
 **Exclude moderators:**
 When enabled all subreddit moderators will be excluded from ranking and can set their own rank manually.
 
