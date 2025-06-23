@@ -1,5 +1,6 @@
 
 
+
 ## Add a ranking system to your subreddit with user flairs based on community karma (Works with existing users flairs).
 
 ## Usage
@@ -42,3 +43,6 @@ If set all subreddit moderators will persistently get this rank. Just enter the 
  - You need to make sure user flair is enabled for your subreddit for this app to work at all.
  - "Exclude moderators" will fully exit once a moderator permission is detected. Allowing each mod to set their custom rank individually.
  - "Moderator rank" will set a global rank for all mods that cannot be changed manually. You must disable "Exclude moderators" for this to work at all.
+
+## Source Code
+You can obtain the code for this app from [here](https://github.com/BesbesCat/autoflair-ranks).
