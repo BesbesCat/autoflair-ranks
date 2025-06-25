@@ -23,7 +23,7 @@ function removeRanksFromFlair(ranks: { [key: string]: number }, userFlairText: s
 
 function getRank(ranks: { [key: string]: number }, totalKarma: number): string {
   let bestRank = '';
-  let highestThreshold = -1;
+  let highestThreshold = -1000000;
 
   for (const [rank, threshold] of Object.entries(ranks)) {
     if (totalKarma >= threshold && threshold > highestThreshold) {
@@ -39,22 +39,36 @@ function replacePlaceholders(template: string, values: Record<string, string | n
   return template.replace(/\$\{(\w+)\}/g, (_, key) => values[key] !== undefined ? String(values[key]) : '');
 }
 
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function getRandomDelay(minSeconds: number, maxSeconds: number): number {
+  const minMs = minSeconds * 1000;
+  const maxMs = maxSeconds * 1000;
+  return Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
+}
+
 Devvit.addTrigger({
-  events: ['PostSubmit', 'PostDelete', 'CommentDelete', 'CommentSubmit', 'PostFlairUpdate'], 
+  events: ['PostSubmit', 'PostDelete', 'CommentDelete', 'CommentSubmit'], 
   onEvent: async (event, context) => {
     const subreddit = await context.reddit.getCurrentSubredditName();
     const subredditId = await context.reddit.getSubredditByName(subreddit);
 
     if (event.author) {
+
+      const delay = getRandomDelay(2, 20);
+      console.log(`Waiting for ${delay / 1000} seconds...`);
+      await sleep(delay);
       const user = event.author.name;
       const lock = await context.redis.get(user);
-      console.log('Event Detected !');
+      console.log(`Event Detected: ${user} `);
       if(lock && lock === '1') {
         console.log('Mutex Lock detected, exiting!');
         return;
       }
       await context.redis.set(user, '1');
-      await context.redis.expire(user, 60);
+      await context.redis.expire(user, 3600);
       
       const useroObj = await context.reddit.getUserByUsername(user);
       let permissions = [];
@@ -117,7 +131,7 @@ Devvit.addTrigger({
 
       if(userFlairText) {
         flairText = flairText + ' ' + removeRanksFromFlair(ranks, userFlairText);
-        if(flairText === userFlairText) {
+        if(flairText.replace(/ /g,'') === userFlairText.replace(/ /g,'')) {
           console.log('No Changes, exiting!');
           return;
         }
@@ -152,7 +166,6 @@ Devvit.addTrigger({
       console.log(`${subreddit}: Trigger fired for user: ${user} in with ${totalKarma} current flair: ${userFlairText} CSS: ${flairCssClass} to ${flairText}`);
 
       await context.reddit.setUserFlair(flair);
-      await context.redis.del(user);
     }
   },
 });
