@@ -56,35 +56,40 @@ Devvit.addTrigger({
     const subredditId = await context.reddit.getSubredditByName(subreddit);
 
     if (event.author) {
-
-      const delay = getRandomDelay(2, 20);
+      const delay = getRandomDelay(1, 5);
       console.log(`Waiting for ${delay / 1000} seconds...`);
       await sleep(delay);
       const user = event.author.name;
       const lock = await context.redis.get(user);
-      console.log(`Event Detected: ${user} `);
+      console.log(`${user}: Event Detected`);
+
       if(lock && lock === '1') {
-        console.log('Mutex Lock detected, exiting!');
+        console.log(`${user}: Mutex Lock detected, exiting!`);
         return;
       }
+
       await context.redis.set(user, '1');
-      await context.redis.expire(user, 3600);
+      await context.redis.expire(user, 300);
       
       const useroObj = await context.reddit.getUserByUsername(user);
+      console.log(`${user}: User object loaded`);
       let permissions = [];
       if(useroObj) {
         permissions = await useroObj.getModPermissionsForSubreddit(subreddit);
+        console.log(`${user}: permissions = ${permissions}`);
       }
 
       let ranksList = await context.settings.get<string>('ranks-list');
+      console.log(`${user}: ranksList = ${ranksList}`);
 
       if (permissions.length > 0) {
         const excludeMods = await context.settings.get<boolean>('exclude-mods');
         if(excludeMods == true) {
-          console.log('Mod detected, exiting!');
+          console.log(`${user}: Mod detected, exiting!`);
           return;
         } else {
           const modrank = await context.settings.get<string>('mod-rank');
+          console.log(`${user}: modrank = ${modrank}`);
           if(modrank) {
             ranksList = '{"'+modrank+'": 0}'
           }
@@ -99,12 +104,16 @@ Devvit.addTrigger({
       }
 
       const commentsListing = await context.reddit.getCommentsByUser({ username: user, limit: 10000, timeframe: 'all' });
-      const comments = await commentsListing.all();
       const postsListing = await context.reddit.getPostsByUser({ username: user, limit: 10000, timeframe: 'all' });
+      const comments = await commentsListing.all();
       const posts = await postsListing.all();
+      console.log(`${user}: Posts/Comments loaded`);
 
       let totalKarma = 0;
+
       const enableCommunityKarma = await context.settings.get<boolean>('enable-community-karma');
+      console.log(`${user}: enableCommunityKarma = ${enableCommunityKarma}`);
+
       for (const item of comments) {
         if (item.subredditName === subreddit) {
           totalKarma += item.score ?? 0;
@@ -113,6 +122,7 @@ Devvit.addTrigger({
           }
         }
       }
+      console.log(`${user}: Comments Karma = ${totalKarma}`);
       for (const item of posts) {
         if (item.subredditName === subreddit) {
           totalKarma += item.score ?? 0;
@@ -121,10 +131,12 @@ Devvit.addTrigger({
           }
         }
       }
+      console.log(`${user}: Total Karma = ${totalKarma}`);
 
       const response = await subredditId.getUserFlair({usernames: [user]});
       const userFlairText = response.users[0].flairText ?? '';
       const flairCssClass = response.users[0].flairCssClass ?? '';
+      console.log(`${user}: Initial Flair = "${userFlairText}" / CSS = "${flairCssClass}"`);
 
       let newrank = getRank(ranks, totalKarma);
       let flairText = newrank;
@@ -132,7 +144,7 @@ Devvit.addTrigger({
       if(userFlairText) {
         flairText = flairText + ' ' + removeRanksFromFlair(ranks, userFlairText);
         if(flairText.replace(/ /g,'') === userFlairText.replace(/ /g,'')) {
-          console.log('No Changes, exiting!');
+          console.log(`${user}: No Changes, exiting!`);
           return;
         }
       }
@@ -143,6 +155,7 @@ Devvit.addTrigger({
         text: flairText,
         cssClass: flairCssClass
       }
+      console.log(`${user}: New Flair = "${flairText}" / CSS = "${flairCssClass}"`);
 
       let lvlupSubject = await context.settings.get<string>('levelup-subject');
       let lvlupBody = await context.settings.get<string>('levelup-message');
@@ -163,9 +176,10 @@ Devvit.addTrigger({
           text: lvlupBody,
         });
       }
-      console.log(`${subreddit}: Trigger fired for user: ${user} in with ${totalKarma} current flair: ${userFlairText} CSS: ${flairCssClass} to ${flairText}`);
+      console.log(`${user}: Message sent`);
 
       await context.reddit.setUserFlair(flair);
+      console.log(`${user}: Flair changed`);
     }
   },
 });
