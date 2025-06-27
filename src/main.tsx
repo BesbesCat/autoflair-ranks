@@ -1,63 +1,27 @@
 import { Devvit } from '@devvit/public-api';
+import {
+  escapeRegExp,
+  removeRanksFromFlair,
+  getRank,
+  replacePlaceholders,
+  sleep,
+  getRandomDelay
+} from './utils/functions';
+
 
 Devvit.configure({
   redditAPI: true,
 });
 
-function escapeRegExp(str: string) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function removeRanksFromFlair(ranks: { [key: string]: number }, userFlairText: string): string {
-  let result = userFlairText;
-
-  for (const rank of Object.keys(ranks)) {
-    const escapedRank = escapeRegExp(rank);
-    const pattern = new RegExp(`(?:\\s|^)${escapedRank}(?=\\s|$)`, 'gu');
-    result = result.replace(pattern, '');
-  }
-
-  return result.trim().replace(/\s{2,}/g, ' ');
-}
-
-
-function getRank(ranks: { [key: string]: number }, totalKarma: number): string {
-  let bestRank = '';
-  let highestThreshold = -1000000;
-
-  for (const [rank, threshold] of Object.entries(ranks)) {
-    if (totalKarma >= threshold && threshold > highestThreshold) {
-      highestThreshold = threshold;
-      bestRank = rank;
-    }
-  }
-
-  return bestRank;
-}
-
-function replacePlaceholders(template: string, values: Record<string, string | number>) {
-  return template.replace(/\$\{(\w+)\}/g, (_, key) => values[key] !== undefined ? String(values[key]) : '');
-}
-
-function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function getRandomDelay(minSeconds: number, maxSeconds: number): number {
-  const minMs = minSeconds * 1000;
-  const maxMs = maxSeconds * 1000;
-  return Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
-}
-
 Devvit.addTrigger({
   events: ['PostSubmit', 'PostDelete', 'CommentDelete', 'CommentSubmit'], 
   onEvent: async (event, context) => {
-    const subreddit = await context.reddit.getCurrentSubredditName();
-    const subredditId = await context.reddit.getSubredditByName(subreddit);
+    const subredditId = await context.reddit.getCurrentSubreddit();
+    const subreddit = subredditId.name;
     const settings = await context.settings.getAll();
 
     if (event.author) {
-      const delay = getRandomDelay(1, 5);
+      const delay = getRandomDelay(0.1, 1);
       console.log(`Waiting for ${delay / 1000} seconds...`);
       await sleep(delay);
       const user = event.author.name;
@@ -70,7 +34,7 @@ Devvit.addTrigger({
       }
 
       await context.redis.set(user, '1');
-      await context.redis.expire(user, 300);
+      await context.redis.expire(user, 60);
       
       const useroObj = await context.reddit.getUserByUsername(user);
       console.log(`${user}: User object loaded`);
@@ -80,19 +44,16 @@ Devvit.addTrigger({
         console.log(`${user}: permissions = ${permissions}`);
       }
 
-      //let ranksList = await context.settings.get<string>('ranks-list');
-      let ranksList = settings['ranks-list'];
+      let ranksList = settings['ranks-list'] as string;
       console.log(`${user}: ranksList = ${ranksList}`);
 
       if (permissions.length > 0) {
-        //const excludeMods = await context.settings.get<boolean>('exclude-mods');
-        const excludeMods = settings['exclude-mods'];
+        const excludeMods = settings['exclude-mods'] as boolean;
         if(excludeMods == true) {
           console.log(`${user}: Mod detected, exiting!`);
           return;
         } else {
-          //const modrank = await context.settings.get<string>('mod-rank');
-          const modrank = settings['mod-rank'];
+          const modrank = settings['mod-rank'] as string;
           console.log(`${user}: modrank = ${modrank}`);
           if(modrank) {
             ranksList = '{"'+modrank+'": 0}'
@@ -107,27 +68,14 @@ Devvit.addTrigger({
         return;
       }
 
-      const commentsListing = await context.reddit.getCommentsByUser({ username: user, limit: 10000, timeframe: 'all' });
-      const postsListing = await context.reddit.getPostsByUser({ username: user, limit: 10000, timeframe: 'all' });
-      const comments = await commentsListing.all();
-      const posts = await postsListing.all();
+      const posts = await context.reddit.getCommentsAndPostsByUser({ username: user, limit: 10000, timeframe: 'all' }).all();
       console.log(`${user}: Posts/Comments loaded`);
 
       let totalKarma = 0;
 
-      //const enableCommunityKarma = await context.settings.get<boolean>('enable-community-karma');
-      const enableCommunityKarma = settings['enable-community-karma'];
+      const enableCommunityKarma = settings['enable-community-karma'] as boolean;
       console.log(`${user}: enableCommunityKarma = ${enableCommunityKarma}`);
 
-      for (const item of comments) {
-        if (item.subredditName === subreddit) {
-          totalKarma += item.score ?? 0;
-          if(enableCommunityKarma == true) {
-            totalKarma--;
-          }
-        }
-      }
-      console.log(`${user}: Comments Karma = ${totalKarma}`);
       for (const item of posts) {
         if (item.subredditName === subreddit) {
           totalKarma += item.score ?? 0;
@@ -162,10 +110,8 @@ Devvit.addTrigger({
       }
       console.log(`${user}: New Flair = "${flairText}" / CSS = "${flairCssClass}"`);
 
-      //let lvlupSubject = await context.settings.get<string>('levelup-subject');
-      //let lvlupBody = await context.settings.get<string>('levelup-message');
-      let lvlupSubject = settings['levelup-subject'];
-      let lvlupBody = settings['levelup-message'];
+      let lvlupSubject = settings['levelup-subject'] as string;
+      let lvlupBody = settings['levelup-message'] as string;
 
       if(lvlupSubject && lvlupBody) {
         const placeholders = {
