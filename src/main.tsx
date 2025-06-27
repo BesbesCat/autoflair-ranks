@@ -54,6 +54,7 @@ Devvit.addTrigger({
   onEvent: async (event, context) => {
     const subreddit = await context.reddit.getCurrentSubredditName();
     const subredditId = await context.reddit.getSubredditByName(subreddit);
+    const settings = await context.settings.getAll();
 
     if (event.author) {
       const delay = getRandomDelay(1, 5);
@@ -79,16 +80,19 @@ Devvit.addTrigger({
         console.log(`${user}: permissions = ${permissions}`);
       }
 
-      let ranksList = await context.settings.get<string>('ranks-list');
+      //let ranksList = await context.settings.get<string>('ranks-list');
+      let ranksList = settings['ranks-list'];
       console.log(`${user}: ranksList = ${ranksList}`);
 
       if (permissions.length > 0) {
-        const excludeMods = await context.settings.get<boolean>('exclude-mods');
+        //const excludeMods = await context.settings.get<boolean>('exclude-mods');
+        const excludeMods = settings['exclude-mods'];
         if(excludeMods == true) {
           console.log(`${user}: Mod detected, exiting!`);
           return;
         } else {
-          const modrank = await context.settings.get<string>('mod-rank');
+          //const modrank = await context.settings.get<string>('mod-rank');
+          const modrank = settings['mod-rank'];
           console.log(`${user}: modrank = ${modrank}`);
           if(modrank) {
             ranksList = '{"'+modrank+'": 0}'
@@ -111,7 +115,8 @@ Devvit.addTrigger({
 
       let totalKarma = 0;
 
-      const enableCommunityKarma = await context.settings.get<boolean>('enable-community-karma');
+      //const enableCommunityKarma = await context.settings.get<boolean>('enable-community-karma');
+      const enableCommunityKarma = settings['enable-community-karma'];
       console.log(`${user}: enableCommunityKarma = ${enableCommunityKarma}`);
 
       for (const item of comments) {
@@ -157,8 +162,10 @@ Devvit.addTrigger({
       }
       console.log(`${user}: New Flair = "${flairText}" / CSS = "${flairCssClass}"`);
 
-      let lvlupSubject = await context.settings.get<string>('levelup-subject');
-      let lvlupBody = await context.settings.get<string>('levelup-message');
+      //let lvlupSubject = await context.settings.get<string>('levelup-subject');
+      //let lvlupBody = await context.settings.get<string>('levelup-message');
+      let lvlupSubject = settings['levelup-subject'];
+      let lvlupBody = settings['levelup-message'];
 
       if(lvlupSubject && lvlupBody) {
         const placeholders = {
