@@ -20,6 +20,12 @@ Ranks are defined in JSON format. Make sure you enter a valid JSON as following:
 
 Where key is the string to be added to user's flair and value is it's corresponding karma score.
 
+**Ranks list:**
+This is used clean up old ranks from flairs or to set a list of words to be removed entirely from the flair.
+It must be defined as a JSON Array (Not a JSON Object):
+
+    ["oldRank1", "oldRank2", "prohibitedWord"]
+
 **Level Up Message Subject:**
 Subject of an automated notification message on level-up. [Supported variables: ${user}, ${rank}, ${subreddit} and ${karma}]
 

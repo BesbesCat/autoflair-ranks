@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package devvit.plugin.redditapi.graphql;
+
+import "devvit/plugin/redditapi/graphql/graphql_msg.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/plugin/redditapi";
+option java_package = "com.reddit.devvit.plugin.redditapi.graphql";
+
+service GraphQL {
+  // Sending a GraphQL query request using a custom query string
+  rpc Query(QueryRequest) returns (QueryResponse);
+
+  // Sending a GraphQL persisted query request
+  //
+  // A persisted query is a query string that's cached on the server side,
+  // along with its unique identifier (always its SHA-256 hash)
+  rpc PersistedQuery(PersistedQueryRequest) returns (QueryResponse);
+}

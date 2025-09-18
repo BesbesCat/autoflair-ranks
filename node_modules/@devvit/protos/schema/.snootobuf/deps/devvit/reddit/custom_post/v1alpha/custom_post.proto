@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package devvit.reddit.custom_post.v1alpha;
+
+import "devvit/ui/block_kit/v1beta/rendering.proto";
+import "devvit/ui/block_kit/v1beta/ui.proto";
+import "devvit/ui/effects/v1alpha/effect.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/reddit/custom_post/v1alpha";
+option java_package = "com.reddit.devvit.reddit.custom_post.v1alpha";
+
+/**
+ * Dimensions describe the layout characteristics of a custom post within Devvit.
+ * They are used to allow Devvitors to create responsive experiences within their post. For
+ * example, they can use this API to conditionally render an element on small viewports only.
+ *
+ * @deprecated Use devvit.ui.events.v1alpha.UIDimensions instead.
+ */
+message Dimensions {
+  option deprecated = true;
+  /** Unitless pixels describing the content box height for the custom post */
+  int32 height = 1;
+  /** Unitless pixels describing the content box width for the custom post */
+  int32 width = 2;
+  /** Describes the device pixel ratio for a device. */
+  float scale = 3;
+  /** Web only: describes the font scaling pixel ratio for a browser window. */
+  optional float font_scale = 4;
+}
+
+/**
+ * **DO NOT EDIT**
+ *
+ * This message is deprecated and should be fixed in time to maintain backwards compatability.
+ */
+message RenderPostRequest {
+  option deprecated = true;
+  // Stateful data received from a previous response
+  optional google.protobuf.Struct state = 1;
+
+  oneof ui {
+    // Render the post with Blocks
+    devvit.ui.block_kit.v1beta.BlockRenderRequest blocks = 2;
+  }
+
+  /** Dimensions provides a way for the entry point to provide layout information to the proto. */
+  optional Dimensions dimensions = 3;
+}
+
+/**
+ * **DO NOT EDIT**
+ *
+ * This message is deprecated and should be fixed in time to maintain backwards compatability.
+ */
+message RenderPostResponse {
+  option deprecated = true;
+  // Stateful data to send back to your app with events
+  optional google.protobuf.Struct state = 1;
+
+  // Optional list of Effects to execute on the client
+  repeated devvit.ui.effects.v1alpha.Effect effects = 2;
+
+  oneof ui {
+    // Blocks UI rendering of the post
+    devvit.ui.block_kit.v1beta.BlockRenderResponse blocks = 4;
+  }
+}
+
+// Custom post type.  Most custom post types will also implement InstanceSettings,
+// which will allow them to be customized by the user in the post creation flow.
+//
+// Custom post types should also look up their instance and installation settings.
+service CustomPost {
+  // This is deprecated and should be fixed in time to maintain backwards compatability.
+  // Please call RenderPostBody instead.
+  rpc RenderPost(RenderPostRequest) returns (RenderPostResponse) {
+    option deprecated = true;
+  }
+
+  rpc RenderPostContent(devvit.ui.block_kit.v1beta.UIRequest) returns (devvit.ui.block_kit.v1beta.UIResponse);
+
+  rpc RenderPostComposer(devvit.ui.block_kit.v1beta.UIRequest) returns (devvit.ui.block_kit.v1beta.UIResponse);
+}

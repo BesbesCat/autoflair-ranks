@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package devvit.ui.form_builder.v1alpha;
+
+import "devvit/ui/form_builder/v1alpha/field.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/ui/form_builder/v1alpha";
+option java_package = "com.reddit.devvit.ui.form_builder.v1alpha";
+
+message Form {
+  repeated FormField fields = 1;
+
+  // Title to display on the form
+  optional string title = 2;
+
+  // Short description explaining the purpose of the form
+  optional string short_description = 3;
+
+  // Alternate text to display on the "OK" button
+  optional string accept_label = 4;
+
+  // Alternate text to display on the "Cancel" button
+  optional string cancel_label = 5;
+
+  // Unique ID for this form, to help differentiate results if managing more than one form at a time
+  optional string id = 6;
+}

@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package devvit.actor.producer;
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/actor/producer";
+option java_package = "com.reddit.devvit.actor.producer";
+
+message Arg {
+  oneof element {
+    string str = 1;
+    int32 i32 = 2;
+    int64 i64 = 3;
+  }
+}
+
+message Args {
+  repeated Arg elements = 1;
+}
+
+service Producer {
+  rpc Produce(Args) returns (stream Arg);
+}

@@ -1,0 +1,178 @@
+syntax = "proto3";
+
+package devvit.plugin.redditapi.moderation;
+
+import "devvit/plugin/redditapi/common/common_msg.proto";
+import "devvit/plugin/redditapi/moderation/moderation_msg.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/plugin/redditapi";
+option java_package = "com.reddit.devvit.plugin.redditapi.moderation";
+
+// MODERATION -  https://www.reddit.com/dev/api#section_moderation
+service Moderation {
+  // https://www.reddit.com/dev/api#GET_about_log
+  rpc AboutLog(AboutLogRequest) returns (AboutLogResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/about/log?after={after}&before={before}&count={count}&limit={limit}&show={show}&mod={mod}&type={type}';
+    option (devvit.plugin.redditapi.common.api_client_config).validate_subreddit_context = 'subreddit';
+  }
+
+  // https://www.reddit.com/dev/api#GET_about_\{location\}
+  rpc AboutLocation(AboutLocationRequest) returns (devvit.plugin.redditapi.common.Listing) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/about/{location}?after={after}&before={before}&count={count}&limit={limit}&show={show}&only={only}';
+    option (devvit.plugin.redditapi.common.api_client_config).validate_subreddit_context = 'subreddit';
+  }
+
+  // https://www.reddit.com/dev/api#GET_about_\reports
+  rpc AboutReports(AboutLocationRequest) returns (devvit.plugin.redditapi.common.Listing) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/about/reports?after={after}&before={before}&count={count}&limit={limit}&show={show}&only={only}';
+    option (devvit.plugin.redditapi.common.api_client_config).validate_subreddit_context = 'subreddit';
+  }
+
+  // https://www.reddit.com/dev/api#GET_about_\spam
+  rpc AboutSpam(AboutLocationRequest) returns (devvit.plugin.redditapi.common.Listing) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/about/spam?after={after}&before={before}&count={count}&limit={limit}&show={show}&only={only}';
+    option (devvit.plugin.redditapi.common.api_client_config).validate_subreddit_context = 'subreddit';
+  }
+
+  // https://www.reddit.com/dev/api#GET_about_\modqueue
+  rpc AboutModqueue(AboutLocationRequest) returns (devvit.plugin.redditapi.common.Listing) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/about/modqueue?after={after}&before={before}&count={count}&limit={limit}&show={show}&only={only}';
+    option (devvit.plugin.redditapi.common.api_client_config).validate_subreddit_context = 'subreddit';
+  }
+
+  // https://www.reddit.com/dev/api#GET_about_\unmoderated
+  rpc AboutUnmoderated(AboutLocationRequest) returns (devvit.plugin.redditapi.common.Listing) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/about/unmoderated?after={after}&before={before}&count={count}&limit={limit}&show={show}&only={only}';
+    option (devvit.plugin.redditapi.common.api_client_config).validate_subreddit_context = 'subreddit';
+  }
+
+  // https://www.reddit.com/dev/api#GET_about_\edited
+  rpc AboutEdited(AboutLocationRequest) returns (devvit.plugin.redditapi.common.Listing) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/about/edited?after={after}&before={before}&count={count}&limit={limit}&show={show}&only={only}';
+    option (devvit.plugin.redditapi.common.api_client_config).validate_subreddit_context = 'subreddit';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_accept_moderator_invite
+  rpc AcceptModeratorInvite(AcceptModeratorInviteRequest) returns (devvit.plugin.redditapi.common.JsonStatus) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/api/accept_moderator_invite';
+    option (devvit.plugin.redditapi.common.api_client_config).validate_subreddit_context = 'subreddit';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_approve
+  rpc Approve(BasicModerationIdRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/approve';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_CAMEL;
+    option (devvit.plugin.redditapi.common.api_client_config).validate_content_id_context = 'id';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_distinguish
+  rpc Distinguish(DistinguishRequest) returns (devvit.plugin.redditapi.common.JsonRedditObjects) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/distinguish';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_SNAKE;
+    option (devvit.plugin.redditapi.common.api_client_config).enforce_json = true;
+    option (devvit.plugin.redditapi.common.api_client_config).validate_content_id_context = 'id';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_ignore_reports
+  rpc IgnoreReports(BasicModerationIdRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/ignore_reports';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_CAMEL;
+    option (devvit.plugin.redditapi.common.api_client_config).validate_content_id_context = 'id';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_leavecontributor
+  rpc LeaveContributor(BasicModerationIdRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/leavecontributor';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_CAMEL;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_leavemoderator
+  rpc LeaveModerator(BasicModerationIdRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/leavemoderator';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_CAMEL;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_mute_message_author
+  rpc MuteMessageAuthor(BasicModerationIdRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/mute_message_author';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_CAMEL;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_remove
+  rpc Remove(RemoveRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/remove';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_CAMEL;
+    option (devvit.plugin.redditapi.common.api_client_config).validate_content_id_context = 'id';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_show_comment
+  rpc ShowComment(BasicModerationIdRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/show_comment';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_CAMEL;
+    option (devvit.plugin.redditapi.common.api_client_config).validate_content_id_context = 'id';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_snooze_reports
+  rpc SnoozeReports(SnoozeReportsRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/snooze_reports';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_CAMEL;
+    option (devvit.plugin.redditapi.common.api_client_config).validate_content_id_context = 'id';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_unignore_reports
+  rpc UnignoreReports(BasicModerationIdRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/unignore_reports';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_CAMEL;
+    option (devvit.plugin.redditapi.common.api_client_config).validate_content_id_context = 'id';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_unmute_message_author
+  rpc UnmuteMessageAuthor(BasicModerationIdRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/unmute_message_author';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_CAMEL;
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_unsnooze_reports
+  rpc UnsnoozeReports(SnoozeReportsRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/unsnooze_reports';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_CAMEL;
+    option (devvit.plugin.redditapi.common.api_client_config).validate_content_id_context = 'id';
+  }
+
+  // https://www.reddit.com/dev/api#POST_api_update_crowd_control_level
+  rpc UpdateCrowdControlLevel(UpdateCrowdControlLevelRequest) returns (google.protobuf.Empty) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'POST';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/api/update_crowd_control_level';
+    option (devvit.plugin.redditapi.common.api_client_config).request_body_type = FORM_CAMEL;
+    option (devvit.plugin.redditapi.common.api_client_config).validate_content_id_context = 'id';
+  }
+
+  // https://www.reddit.com/dev/api#GET_stylesheet
+  rpc Stylesheet(StylesheetRequest) returns (google.protobuf.StringValue) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/stylesheet';
+    option (devvit.plugin.redditapi.common.api_client_config).use_custom_response_parser = true;
+  }
+}

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package devvit.actor.reddit;
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/actor/reddit";
+option java_package = "com.reddit.devvit.actor.reddit";
+
+// NOTE: This enum is in its own file to optimize tree-shaking
+
+enum ContextType {
+  POST = 0;
+  COMMENT = 1;
+  SUBREDDIT = 2;
+}

@@ -5,7 +5,8 @@ import {
   getRank,
   replacePlaceholders,
   sleep,
-  getRandomDelay
+  getRandomDelay,
+  removeOldFromFlair
 } from './utils/functions';
 
 
@@ -72,7 +73,6 @@ Devvit.addTrigger({
       console.log(`${user}: Posts/Comments loaded`);
 
       let totalKarma = 0;
-
       const enableCommunityKarma = settings['enable-community-karma'] as boolean;
       console.log(`${user}: enableCommunityKarma = ${enableCommunityKarma}`);
 
@@ -90,12 +90,24 @@ Devvit.addTrigger({
       const userFlairText = response.users[0].flairText ?? '';
       const flairCssClass = response.users[0].flairCssClass ?? '';
       console.log(`${user}: Initial Flair = "${userFlairText}" / CSS = "${flairCssClass}"`);
+      let removeList = settings['remove-list'] as string;
+      let cleanFlairText = userFlairText;
+      if(removeList) {
+        console.log(`${user}: removeList = ${removeList}`);
+        let remove = JSON.parse(removeList);
+        cleanFlairText = removeOldFromFlair(remove, userFlairText);
+        console.log(`${user}: cleanFlairText = ${cleanFlairText}`);
+      }
 
       let newrank = getRank(ranks, totalKarma);
       let flairText = newrank;
-
-      if(userFlairText) {
-        flairText = flairText + ' ' + removeRanksFromFlair(ranks, userFlairText);
+      const rankDir = await context.settings.get('rank-direction') ?? 'prepend';
+      if(cleanFlairText) {
+        if(rankDir == 'append') {
+          flairText = removeRanksFromFlair(ranks, cleanFlairText) + ' ' + flairText;
+        } else {
+          flairText = flairText + ' ' + removeRanksFromFlair(ranks, cleanFlairText);
+        }
         if(flairText.replace(/ /g,'') === userFlairText.replace(/ /g,'')) {
           console.log(`${user}: No Changes, exiting!`);
           return;
@@ -153,10 +165,32 @@ Devvit.addSettings([
     helpText: 'When enabled ranks will be calculated excluding initial upvote',
   },
   {
+    type: 'select',
+    name: 'rank-direction',
+    label: 'Add rank before or after existing flair',
+    options: [
+      {
+        label: 'Before',
+        value: 'prepend',
+      },
+      {
+        label: 'After',
+        value: 'append',
+      },
+    ],
+    multiSelect: false,
+  },
+  {
     type: 'paragraph',
     name: 'ranks-list',
     label: 'Ranks list',
-    helpText: 'Eenter as JSON, e.g. {"rank1": 0, "rank2": 1}',
+    helpText: 'JSON list of ranks and karma, e.g. {"rank1": 0, "rank2": 1}',
+  },
+  {
+    type: 'paragraph',
+    name: 'remove-list',
+    label: 'Remove list',
+    helpText: 'JSON list of words to be removed from ranks, e.g. {"oldrank1", "oldrank2"}',
   },
   {
     type: 'paragraph',

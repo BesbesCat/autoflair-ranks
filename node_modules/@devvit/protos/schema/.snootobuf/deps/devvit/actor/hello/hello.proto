@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package devvit.actor.hello;
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/actor/hello";
+option java_package = "com.reddit.devvit.actor.hello";
+
+message PingMessage {
+  string message = 1;
+  int32 delay_millis = 2;
+  float success_probability = 3;
+}
+
+// hello is a ping service, with various conditions applied to how it succeeds
+// and fails
+service Hello {
+  rpc Ping(PingMessage) returns (PingMessage);
+}

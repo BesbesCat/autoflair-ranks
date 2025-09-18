@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package devvit.runtime.actor.v1alpha;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/runtime/actor/v1alpha";
+option java_package = "com.reddit.devvit.runtime.actor.v1alpha";
+
+message HealthStatus {
+  google.protobuf.Timestamp start = 1;
+  google.protobuf.Timestamp end = 2;
+}
+
+service Health {
+  rpc Check(google.protobuf.Empty) returns (HealthStatus);
+}

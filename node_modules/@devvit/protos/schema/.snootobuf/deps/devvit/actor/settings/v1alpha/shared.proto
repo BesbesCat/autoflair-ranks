@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package devvit.actor.settings.v1alpha;
+
+import "devvit/ui/form_builder/v1alpha/form.proto";
+import "devvit/ui/form_builder/v1alpha/value.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/actor/settings";
+option java_package = "com.reddit.devvit.actor.settings";
+
+message GetFieldsRequest {
+  // If true, the form is editing existing settings
+  bool editing = 1;
+}
+
+message GetFieldsResponse {
+  devvit.ui.form_builder.v1alpha.Form fields = 1;
+}
+
+message ValidateFormRequest {
+  // If true, the form is editing existing settings
+  bool editing = 1;
+
+  // Map of id:value pairs to validate
+  map<string, devvit.ui.form_builder.v1alpha.FormFieldValue> field_values = 2;
+}
+
+message ValidateFormResponse {
+  // If false, prevent submission and display errors on the form
+  bool success = 1;
+
+  // Map of id:error pairs to display on the form
+  map<string, string> errors = 2;
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package devvit.payments.v1alpha;
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/payments";
+option java_package = "com.reddit.devvit.payments";
+
+// TODO: we may want to pull this directly from the pay protos via snootobuf
+enum Environment {
+  ENVIRONMENT_UNSPECIFIED = 0;
+  ENVIRONMENT_SANDBOX = 1;
+  ENVIRONMENT_PRODUCTION = 2;
+}

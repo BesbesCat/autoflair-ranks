@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package devvit.actor.settings.v1alpha;
+
+import "devvit/actor/settings/v1alpha/shared.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/actor/settings";
+option java_package = "com.reddit.devvit.actor.settings";
+
+// Define settings scoped to a single instance of your app.
+// Useful for multi-instanced apps such as custom posts, where each post is configured by the user
+// when they create the post.  These values will _not_ be shared between instances.
+// Load the saved values with the Settings plugin.
+service InstanceSettings {
+  // Requested by the platform when rendering the form to configure this actor
+  rpc GetSettingsFields(GetFieldsRequest) returns (GetFieldsResponse);
+
+  // Called by the platform to allow more advanced verification of fields
+  rpc ValidateForm(ValidateFormRequest) returns (ValidateFormResponse);
+}

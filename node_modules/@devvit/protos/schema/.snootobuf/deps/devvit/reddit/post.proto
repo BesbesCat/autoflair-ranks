@@ -1,0 +1,192 @@
+syntax = "proto3";
+
+package devvit.reddit;
+
+import "devvit/reddit/common.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/reddit";
+option java_package = "com.reddit.devvit.reddit";
+
+message Post {
+  repeated Awarding all_awardings = 1;
+  google.protobuf.BoolValue allow_live_comments = 2;
+  google.protobuf.BoolValue approved = 3;
+  google.protobuf.Int32Value approved_at_utc = 4;
+  google.protobuf.StringValue approved_by = 5;
+  google.protobuf.BoolValue archived = 6;
+  google.protobuf.StringValue author = 7;
+  google.protobuf.StringValue author_flair_background_color = 8;
+  google.protobuf.StringValue author_flair_css_class = 9;
+  repeated AuthorFlairRichText author_flair_richtext = 10;
+  google.protobuf.StringValue author_flair_template_id = 11;
+  google.protobuf.StringValue author_flair_text = 12;
+  google.protobuf.StringValue author_flair_text_color = 13;
+  google.protobuf.StringValue author_flair_type = 14;
+  google.protobuf.StringValue author_fullname = 15;
+  google.protobuf.BoolValue author_is_blocked = 16;
+  google.protobuf.BoolValue author_patreon_flair = 17;
+  google.protobuf.BoolValue author_premium = 18;
+  repeated google.protobuf.StringValue awarders = 19;
+  google.protobuf.Int32Value banned_at_utc = 20;
+  google.protobuf.StringValue banned_by = 21;
+  google.protobuf.BoolValue can_gild = 22;
+  google.protobuf.BoolValue can_mod_post = 23;
+  google.protobuf.StringValue category = 24;
+  google.protobuf.BoolValue clicked = 25;
+  repeated google.protobuf.StringValue content_categories = 26;
+  google.protobuf.BoolValue contest_mode = 27;
+  google.protobuf.Int32Value created = 28;
+  google.protobuf.Int32Value created_utc = 29;
+  google.protobuf.StringValue discussion_type = 30;
+  google.protobuf.StringValue distinguished = 31;
+  google.protobuf.StringValue domain = 32;
+  google.protobuf.Int32Value downs = 33;
+  google.protobuf.BoolValue edited = 34;
+  google.protobuf.Int32Value gilded = 35;
+  Gildings gildings = 36;
+  google.protobuf.BoolValue hidden = 37;
+  google.protobuf.BoolValue hide_score = 38;
+  google.protobuf.StringValue id = 39;
+  google.protobuf.BoolValue ignore_reports = 40;
+  google.protobuf.BoolValue is_created_from_ads_ui = 41;
+  google.protobuf.BoolValue is_crosspostable = 42;
+  google.protobuf.BoolValue is_meta = 43;
+  google.protobuf.BoolValue is_original_content = 44;
+  google.protobuf.BoolValue is_reddit_media_domain = 45;
+  google.protobuf.BoolValue is_robot_indexable = 46;
+  google.protobuf.BoolValue is_self = 47;
+  google.protobuf.BoolValue is_video = 48;
+  google.protobuf.BoolValue likes = 49;
+  google.protobuf.StringValue link_flair_background_color = 50;
+  google.protobuf.StringValue link_flair_css_class = 51;
+  repeated google.protobuf.StringValue link_flair_richtext = 52;
+  google.protobuf.StringValue link_flair_text_color = 53;
+  google.protobuf.StringValue link_flair_text = 54;
+  google.protobuf.StringValue link_flair_type = 55;
+  google.protobuf.BoolValue locked = 56;
+  devvit.reddit.MediaEmbed media_embed = 57;
+  google.protobuf.BoolValue media_only = 58;
+  Media media = 59;
+  google.protobuf.StringValue mod_note = 60;
+  google.protobuf.StringValue mod_reason_by = 61;
+  google.protobuf.StringValue mod_reason_title = 62;
+  repeated google.protobuf.ListValue mod_reports = 63; // array of array of strings :-/
+  google.protobuf.StringValue name = 64;
+  google.protobuf.BoolValue no_follow = 65;
+  google.protobuf.Int32Value num_comments = 66;
+  google.protobuf.Int32Value num_crossposts = 67;
+  google.protobuf.Int32Value num_duplicates = 68;
+  google.protobuf.Int32Value num_reports = 69;
+  google.protobuf.BoolValue over_18 = 70;
+  google.protobuf.StringValue parent_whitelist_status = 71;
+  google.protobuf.StringValue permalink = 72;
+  google.protobuf.BoolValue pinned = 73;
+  google.protobuf.StringValue post_hint = 74;
+  Preview preview = 75;
+  google.protobuf.Int32Value pwls = 76;
+  google.protobuf.BoolValue quarantine = 77;
+  google.protobuf.StringValue removal_reason = 78;
+  google.protobuf.StringValue removed_by_category = 79;
+  google.protobuf.StringValue removed_by = 80;
+  google.protobuf.BoolValue removed = 81;
+  repeated google.protobuf.StringValue report_reasons = 82;
+  google.protobuf.StringValue rte_mode = 83;
+  google.protobuf.BoolValue saved = 84;
+  google.protobuf.Int32Value score = 85;
+  devvit.reddit.MediaEmbed secure_media_embed = 86;
+  Media secure_media = 87;
+  google.protobuf.StringValue selftext_html = 88;
+  google.protobuf.StringValue selftext = 89;
+  google.protobuf.BoolValue send_replies = 90;
+  google.protobuf.BoolValue spam = 91;
+  google.protobuf.BoolValue spoiler = 92;
+  google.protobuf.BoolValue stickied = 93;
+  google.protobuf.StringValue subreddit_id = 94;
+  google.protobuf.StringValue subreddit_name_prefixed = 95;
+  google.protobuf.Int32Value subreddit_subscribers = 96;
+  google.protobuf.StringValue subreddit_type = 97;
+  google.protobuf.StringValue subreddit = 98;
+  google.protobuf.StringValue suggested_sort = 99;
+  google.protobuf.Int32Value thumbnail_height = 100;
+  google.protobuf.Int32Value thumbnail_width = 101;
+  google.protobuf.StringValue thumbnail = 102;
+  google.protobuf.StringValue title = 103;
+  google.protobuf.StringValue top_awarded_type = 104;
+  google.protobuf.Int32Value total_awards_received = 105;
+  repeated google.protobuf.StringValue treatment_tags = 106;
+  google.protobuf.Int32Value ups = 107;
+  google.protobuf.FloatValue upvote_ratio = 108;
+  google.protobuf.StringValue url_overridden_by_dest = 109;
+  google.protobuf.StringValue url = 110;
+  repeated google.protobuf.ListValue user_reports = 111; // array of array of strings :-/
+  google.protobuf.Int32Value view_count = 112;
+  google.protobuf.BoolValue visited = 113;
+  google.protobuf.StringValue whitelist_status = 114;
+  google.protobuf.Int32Value wls = 115;
+
+  // properties for automod invocation
+  google.protobuf.StringValue link_flair_template_id = 150;
+  google.protobuf.Int32Value crowd_control_level = 151;
+  google.protobuf.BoolValue is_gallery = 152;
+  google.protobuf.BoolValue is_live_stream = 153;
+  google.protobuf.BoolValue is_meta_discussion = 154;
+  OEmbed oembed = 155;
+  BanInfo ban_info = 156;
+
+  // PRIVATE - DO NOT SET FOR PUBLIC USE
+  google.protobuf.BoolValue marked_spam = 157;
+
+  // properties for automod invocation
+  google.protobuf.StringValue verdict = 158;
+  RedditPostGallery gallery = 159;
+}
+
+message Media {
+  message RedditVideo {
+    google.protobuf.Int32Value bitrate_kbps = 1;
+    google.protobuf.StringValue dash_url = 2;
+    google.protobuf.Int32Value duration = 3;
+    google.protobuf.StringValue fallback_url = 4;
+    google.protobuf.Int32Value height = 5;
+    google.protobuf.StringValue hls_url = 6;
+    google.protobuf.BoolValue is_gif = 7;
+    google.protobuf.StringValue scrubber_media_url = 8;
+    google.protobuf.StringValue transcoding_status = 9;
+    google.protobuf.Int32Value width = 10;
+  }
+
+  RedditVideo reddit_video = 1;
+}
+
+message Preview {
+  message PreviewImage {
+    message Image {
+      google.protobuf.Int32Value height = 1;
+      google.protobuf.StringValue url = 2;
+      google.protobuf.Int32Value width = 3;
+    }
+
+    google.protobuf.StringValue id = 1;
+    repeated Image resolutions = 2;
+    Image source = 3;
+    Image variants = 4;
+  }
+
+  google.protobuf.BoolValue enabled = 1;
+  repeated PreviewImage images = 2;
+}
+
+message OEmbed {
+  google.protobuf.StringValue author_name = 1;
+  google.protobuf.StringValue author_url = 2;
+  google.protobuf.StringValue description = 3;
+  google.protobuf.StringValue title = 4;
+}
+
+message RedditPostGallery {
+  google.protobuf.StringValue body = 1;
+  google.protobuf.StringValue domain = 2;
+  google.protobuf.StringValue url = 3;
+}

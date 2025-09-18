@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package reddit.devvit.useractions.v1;
+
+option go_package = "github.snooguts.net/reddit/devplatform-api/go/grpc/devvit/useractions/v1;useractions";
+
+// Represents data on the user's content submission
+message UserGeneratedContent {
+  // The text body of the content
+  string text = 1;
+  // The imageUrls attached to the content, if any
+  repeated string image_urls = 2;
+}

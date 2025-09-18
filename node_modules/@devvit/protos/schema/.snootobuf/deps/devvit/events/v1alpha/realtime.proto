@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package devvit.events.v1alpha;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/events";
+option java_package = "com.reddit.devvit.actor.events";
+
+service Realtime {
+  rpc Subscribe(RealtimeRequest) returns (stream RealtimeEvent) {}
+  rpc Send(RealtimeEvent) returns (google.protobuf.Empty) {}
+}
+
+message RealtimeRequest {
+  repeated string channels = 1;
+}
+
+message RealtimeEvent {
+  // The channel that received the message
+  string channel = 1;
+  // The data that was received
+  google.protobuf.Struct data = 2;
+}

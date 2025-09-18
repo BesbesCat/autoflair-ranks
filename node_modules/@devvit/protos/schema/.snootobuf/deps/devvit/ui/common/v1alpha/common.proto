@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package devvit.ui.common.v1alpha;
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/ui/common/v1alpha";
+option java_package = "com.reddit.devvit.ui.common.v1alpha";
+
+// Dimensions describe the layout characteristics of a custom post within
+// Devvit. They are used to allow Devvitors to create responsive experiences
+// within their post. For example, they can use this API to conditionally render
+// an element on small viewports only.
+message UIDimensions {
+  // Unitless pixels describing the content box height for the custom post.
+  int32 height = 1;
+  // Unitless pixels describing the content box width for the custom post.
+  int32 width = 2;
+  // Describes the device pixel ratio for a device.
+  float scale = 3;
+  // Web only: describes the font scaling pixel ratio for a browser window.
+  optional float font_scale = 4;
+}

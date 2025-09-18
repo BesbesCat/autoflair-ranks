@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package devvit.ui.events.v1alpha;
+
+import "devvit/ui/effects/v1alpha/effect.proto";
+import "devvit/ui/events/v1alpha/event.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/ui/events/v1alpha";
+option java_package = "com.reddit.devvit.ui.events.v1alpha";
+
+message HandleUIEventRequest {
+  option deprecated = true;
+  google.protobuf.Struct state = 1;
+
+  UIEvent event = 2;
+}
+
+message HandleUIEventResponse {
+  option deprecated = true;
+  google.protobuf.Struct state = 1;
+
+  repeated devvit.ui.effects.v1alpha.Effect effects = 2;
+}
+
+service UIEventHandler {
+  option deprecated = true;
+
+  rpc HandleUIEvent(HandleUIEventRequest) returns (HandleUIEventResponse);
+}

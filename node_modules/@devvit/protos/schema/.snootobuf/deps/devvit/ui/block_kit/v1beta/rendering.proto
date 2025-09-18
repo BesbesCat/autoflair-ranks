@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package devvit.ui.block_kit.v1beta;
+
+import "devvit/ui/block_kit/v1beta/block.proto";
+import "devvit/ui/block_kit/v1beta/enums.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/ui/block_kit/v1beta";
+option java_package = "com.reddit.devvit.ui.block_kit.v1beta";
+
+message BlockRenderRequest {
+  // What triggered this render request
+  BlockRenderEventType type = 1;
+
+  // ID to differentiate between similar events of the same type
+  // such as an actionId for USER_ACTION events
+  optional string id = 2;
+
+  // Additional data from the event, if any
+  optional google.protobuf.Struct data = 3;
+}
+
+message BlockRenderResponse {
+  // A BLOCK_ROOT element
+  Block ui = 1;
+}

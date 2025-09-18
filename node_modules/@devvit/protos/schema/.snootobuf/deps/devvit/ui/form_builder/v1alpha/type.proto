@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package devvit.ui.form_builder.v1alpha;
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/ui/form_builder/v1alpha";
+option java_package = "com.reddit.devvit.ui.form_builder.v1alpha";
+
+enum FormFieldType {
+  // Single-line string
+  STRING = 0;
+
+  // Multi-line string
+  PARAGRAPH = 1;
+
+  // Number input
+  NUMBER = 2;
+
+  // Checkbox, switch
+  BOOLEAN = 3;
+
+  // Collect multiple entries of a single type
+  LIST = 4;
+
+  // Provide a list of options for the user to choose from
+  SELECTION = 5;
+
+  // Create a labeled subsection of the form with nested fields
+  GROUP = 6;
+
+  // Image upload - value is a URL for the uploaded image
+  IMAGE = 7;
+}

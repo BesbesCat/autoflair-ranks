@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package devvit.ui.effects.web_view.v1alpha;
+
+import "devvit/ui/effects/web_view/v1alpha/fullscreen.proto";
+import "devvit/ui/effects/web_view/v1alpha/post_message.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/ui/effects/web_view/v1alpha";
+option java_package = "com.reddit.devvit.ui.effects.web_view.v1alpha";
+
+// Effect to communicate and control WebViews
+message WebViewEffect {
+  oneof effect {
+    WebViewPostMessageEffect post_message = 1;
+    WebViewFullScreenVisibilityEffect fullscreen = 2;
+  }
+}

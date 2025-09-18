@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package devvit.payments.v1alpha;
+
+import "devvit/payments/v1alpha/common.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/payments";
+option java_package = "com.reddit.devvit.payments";
+
+// Mapping from payments API Product : https://github.snooguts.net/reddit/reddit-service-pay-api/blob/main/api/protos/reddit/xpaymentsplatform/payapi/v1/common.proto#L7
+message Product {
+  // the developer defined identifer for the product
+  string sku = 1001;
+
+  // Human-readable name of the product
+  string name = 3;
+
+  // the price of the product
+  ProductPrice price = 5;
+
+  // whether or not this product is defined for sandbox or production purchases
+  devvit.payments.v1alpha.Environment environment = 20;
+
+  // Human-readable description of the product
+  string description = 21;
+
+  // the accounting treatment of the product
+  AccountingType accounting_type = 23;
+
+  // tags associated with the product
+  map<string, string> product_metadata = 1002;
+
+  // Images associated with the product. The key is the image type and the value
+  // is the asset path (without assets/ or whatever the media directory is). Eg,
+  // `"foo.png"` and `subdir/bar.gif`. Currently, only the `icon` key can
+  // reference images.
+  map<string, string> images = 1003;
+
+  // reserved so we are compatible with internal Payment protos
+  reserved 1, 2, 4, 6 to 11, 22;
+  reserved "id", "product_type", "payment_provider", "base_price", "external_id", "metadata", "generic_metadata", "reddit_gold", "goldpack", "owner_id";
+}
+
+message ProductPrice {
+  int32 amount = 1;
+  Currency currency = 2;
+}
+
+enum Currency {
+  CURRENCY_UNSPECIFIED = 0;
+  reserved 1 to 199;
+
+  GOLD = 200; // Reddit internal currency
+}
+
+enum AccountingType {
+  ACCOUNTING_TYPE_UNSPECIFIED = 0;
+  ACCOUNTING_TYPE_INSTANT = 1; // Used immediately as it is purchased.
+  ACCOUNTING_TYPE_DURABLE = 2; // It grants access indefinitely.
+  ACCOUNTING_TYPE_CONSUMABLE = 3; // User can use the good at any time in the future but it is gone once it's used.
+  ACCOUNTING_TYPE_VALID_FOR_1D = 4; // Consumed over a fixed period of time.
+  ACCOUNTING_TYPE_VALID_FOR_7D = 5;
+  ACCOUNTING_TYPE_VALID_FOR_30D = 6;
+  ACCOUNTING_TYPE_VALID_FOR_1Y = 7;
+}

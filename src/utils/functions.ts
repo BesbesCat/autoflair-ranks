@@ -14,6 +14,16 @@ export function removeRanksFromFlair(ranks: { [key: string]: number }, userFlair
   return result.trim().replace(/\s{2,}/g, ' ');
 }
 
+export function removeOldFromFlair(ranks: string[], userFlairText: string): string {
+  let result = userFlairText;
+  for (const rank of ranks) {
+    const escapedRank = escapeRegExp(rank);
+    const pattern = new RegExp(`(?:\\s|^)${escapedRank}(?=\\s|$)`, 'gu');
+    result = result.replace(pattern, '');
+  }
+  return result.trim().replace(/\s{2,}/g, ' ');
+}
+
 export function getRank(ranks: { [key: string]: number }, totalKarma: number): string {
   let bestRank = '';
   let highestThreshold = -1000000;

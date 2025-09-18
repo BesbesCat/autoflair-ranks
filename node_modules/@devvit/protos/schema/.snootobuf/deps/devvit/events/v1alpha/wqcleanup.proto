@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package devvit.events.v1alpha;
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/events";
+option java_package = "com.reddit.devvit.actor.events";
+
+message WqCleanup {
+  uint64 cursor = 1;
+}

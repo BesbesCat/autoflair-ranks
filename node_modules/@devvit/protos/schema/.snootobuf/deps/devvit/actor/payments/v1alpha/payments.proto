@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package devvit.actor.payments.v1alpha;
+
+import "devvit/payments/v1alpha/order.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/actor/payments";
+option java_package = "com.reddit.devvit.actor.payments";
+
+// PaymentProcessor is an actor type for exposing hooks that are triggered
+// as part of product order flow.
+service PaymentProcessor {
+  // FulfillOrder is called while the order is in-flight by the Payments platform.
+  // This give the opportunity for a developer to acknowlege and order has been
+  // fulfilled or reject it
+  rpc FulfillOrder(FulfillOrderRequest) returns (FulfillOrderResponse);
+
+  // RefundOrder is called when an order is refunded. This happens asynchnously
+  // outside the main order flow
+  rpc RefundOrder(RefundOrderRequest) returns (RefundOrderResponse);
+}
+
+message FulfillOrderRequest {
+  devvit.payments.v1alpha.Order order = 1;
+}
+
+message RefundOrderRequest {
+  devvit.payments.v1alpha.Order order = 1;
+}
+
+message FulfillOrderResponse {
+  oneof result {
+    // the product has been acknowledged and delivered
+    bool acknowledged = 1;
+    // the reason for rejecting product delivery
+    string rejection_reason = 2;
+  }
+}
+
+// RefundHandlerResult is empty. Placeholder for future functionality
+message RefundOrderResponse {}

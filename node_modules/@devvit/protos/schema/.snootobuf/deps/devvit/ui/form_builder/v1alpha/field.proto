@@ -1,0 +1,134 @@
+syntax = "proto3";
+
+package devvit.ui.form_builder.v1alpha;
+
+import "devvit/ui/form_builder/v1alpha/type.proto";
+import "devvit/ui/form_builder/v1alpha/value.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/ui/form_builder/v1alpha";
+option java_package = "com.reddit.devvit.ui.form_builder.v1alpha";
+
+// The base type
+message FormField {
+  // Unique ID within the actor or app
+  string field_id = 1;
+
+  // Field type
+  FormFieldType field_type = 2;
+
+  // Text to display above the input field
+  string label = 3;
+
+  // Additional description to help the user
+  optional string help_text = 4;
+
+  // Default/initial value
+  optional FormFieldValue default_value = 5;
+
+  // Whether or not this field is required to submit the form
+  optional bool required = 6;
+
+  // If true, disable the input
+  optional bool disabled = 7;
+
+  // Additional field configuration
+  FieldConfig field_config = 8;
+
+  // If true, this field is some sort of API key or password
+  optional bool is_secret = 9;
+}
+
+// Per-type configuration options
+message FieldConfig {
+  message String {
+    // Minimum allowed length for the string
+    optional int32 min_length = 1;
+
+    // Maximum allowed length for the string
+    optional int32 max_length = 2;
+
+    // Placeholder to use when rendering the input field
+    optional string placeholder = 3;
+  }
+
+  message Paragraph {
+    // Maximum allowed characters
+    optional int32 max_characters = 1;
+
+    // Height based on the number of lines to display in the text area
+    optional int32 line_height = 2;
+
+    // Placeholder to use when rendering the input field
+    optional string placeholder = 3;
+  }
+
+  message Number {
+    // Sets the amount the field can increment/decrement [Default: 1]
+    optional double step = 1;
+
+    // Minimum allowed value
+    optional double min = 2;
+
+    // Maximum allowed value
+    optional double max = 3;
+  }
+
+  message Boolean {}
+
+  message List {
+    // The data type of each item in the list; LIST/SELECTION/GROUP not allowed
+    FormFieldType item_type = 1;
+
+    // Additional configuration for items
+    optional FieldConfig item_config = 2;
+
+    // Minimum number of entries allowed in the list
+    optional int32 min_entries = 3;
+
+    // Maximum number of entries allowed in the list
+    optional int32 max_entries = 4;
+
+    // Label on the new entry input
+    optional string entry_label = 5;
+  }
+
+  message Selection {
+    message Item {
+      // User-facing label
+      string label = 1;
+
+      // Value to use when this option is selected
+      string value = 2;
+    }
+
+    // Ordered list of choices to display in this field
+    repeated Item choices = 1;
+
+    // If true allow multiple selections
+    optional bool multi_select = 2;
+
+    // If multi_select the minimum number of selections required
+    optional int32 min_selections = 3;
+
+    // If multi_select the maximum number of selections allowed
+    optional int32 max_selections = 4;
+
+    // Render the selection as a list of radio buttons or checkboxes
+    optional bool render_as_list = 5;
+  }
+
+  message Group {
+    // Fields included in this group
+    repeated FormField fields = 1;
+  }
+
+  oneof configs {
+    String string_config = 1;
+    Paragraph paragraph_config = 2;
+    Number number_config = 3;
+    Boolean boolean_config = 4;
+    List list_config = 5;
+    Selection selection_config = 6;
+    Group group_config = 7;
+  }
+}

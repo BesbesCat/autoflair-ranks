@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package devvit.ui.effects.web_view.v1alpha;
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/ui/effects/web_view/v1alpha";
+option java_package = "com.reddit.devvit.ui.effects.web_view.v1alpha";
+
+// Effect emitted on intent to share URL. Displays a native share sheet on
+// mobile. Always share the current post (PDP) and use the post data entrypoint.
+// Effects are always untrusted.
+message WebViewShareEffect {
+  // User data as a string for ShareParam. Eg, `'abc'` or `'{"abc":"123"}'`.
+  optional string user_data = 1;
+  // Title of share sheet.
+  optional string title = 2;
+  // Body of share sheet.
+  optional string text = 3;
+  // App icon URI (likely URL derived from
+  // `LinkedBundle.assets['$devvit_icon.png']`). Eg,
+  // `'https://csipc4--699ce78e-44a2-43c4-b581-3f58298a2711-0-0-9-webview.devvit.net/$devvit_icon.png'`.
+  optional string app_icon_uri = 4;
+}

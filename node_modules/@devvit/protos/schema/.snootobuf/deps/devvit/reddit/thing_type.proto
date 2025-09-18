@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package devvit.reddit;
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/reddit";
+option java_package = "com.reddit.devvit.reddit";
+
+enum ThingType {
+  UNKNOWN = 0;
+  COMMENT = 1;
+  ACCOUNT = 2;
+  POST = 3;
+  MESSAGE = 4;
+  SUBREDDIT = 5;
+  AWARD = 6;
+}

@@ -1,0 +1,104 @@
+syntax = "proto3";
+
+package devvit.reddit;
+
+import "devvit/reddit/common.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/reddit";
+option java_package = "com.reddit.devvit.reddit";
+
+message Comment {
+  repeated devvit.reddit.Awarding all_awardings = 1;
+  google.protobuf.BoolValue approved = 2;
+  google.protobuf.Int32Value approved_at_utc = 3;
+  google.protobuf.StringValue approved_by = 4;
+  google.protobuf.BoolValue archived = 5;
+  google.protobuf.StringValue associated_award = 6;
+  google.protobuf.StringValue author = 7;
+  google.protobuf.StringValue author_flair_background_color = 8;
+  google.protobuf.StringValue author_flair_css_class = 9;
+  repeated devvit.reddit.AuthorFlairRichText author_flair_richtext = 10;
+  google.protobuf.StringValue author_flair_template_id = 11;
+  google.protobuf.StringValue author_flair_text = 12;
+  google.protobuf.StringValue author_flair_text_color = 13;
+  google.protobuf.StringValue author_flair_type = 14;
+  google.protobuf.StringValue author_fullname = 15;
+  google.protobuf.BoolValue author_is_blocked = 16;
+  google.protobuf.BoolValue author_patreon_flair = 17;
+  google.protobuf.BoolValue author_premium = 18;
+  repeated google.protobuf.StringValue awarders = 19;
+  google.protobuf.Int32Value banned_at_utc = 20;
+  google.protobuf.StringValue banned_by = 21;
+  google.protobuf.StringValue body = 22;
+  google.protobuf.StringValue body_html = 23;
+  google.protobuf.BoolValue can_gild = 24;
+  google.protobuf.BoolValue can_mod_post = 25;
+  google.protobuf.BoolValue collapsed = 26;
+  google.protobuf.BoolValue collapsed_because_crowd_control = 27;
+  google.protobuf.StringValue collapsed_reason = 28;
+  google.protobuf.StringValue collapsed_reason_code = 29;
+  google.protobuf.StringValue comment_type = 30;
+  google.protobuf.Int32Value controversiality = 31;
+  google.protobuf.Int32Value created = 32;
+  google.protobuf.Int32Value created_utc = 33;
+  google.protobuf.Int32Value depth = 34;
+  google.protobuf.StringValue distinguished = 35;
+  google.protobuf.Int32Value downs = 36;
+  google.protobuf.BoolValue edited = 37;
+  google.protobuf.Int32Value gilded = 38;
+  devvit.reddit.Gildings gildings = 39;
+  google.protobuf.StringValue id = 40;
+  google.protobuf.BoolValue ignore_reports = 41;
+  google.protobuf.BoolValue is_submitter = 42;
+  google.protobuf.BoolValue likes = 43;
+  google.protobuf.StringValue link_id = 44;
+  google.protobuf.BoolValue locked = 45;
+  google.protobuf.StringValue mod_note = 46;
+  google.protobuf.StringValue mod_reason_by = 47;
+  google.protobuf.StringValue mod_reason_title = 48;
+  repeated google.protobuf.ListValue mod_reports = 49; // array of array of strings :-/
+  google.protobuf.StringValue name = 50;
+  google.protobuf.BoolValue no_follow = 51;
+  google.protobuf.Int32Value num_reports = 52;
+  google.protobuf.StringValue parent_id = 53;
+  google.protobuf.StringValue permalink = 54;
+  google.protobuf.StringValue removal_reason = 55;
+  google.protobuf.BoolValue removed = 56;
+  google.protobuf.StringValue replies = 57;
+  repeated google.protobuf.StringValue report_reasons = 58;
+  google.protobuf.StringValue rte_mode = 59;
+  google.protobuf.BoolValue saved = 60;
+  google.protobuf.Int32Value score = 61;
+  google.protobuf.BoolValue score_hidden = 62;
+  google.protobuf.BoolValue send_replies = 63;
+  google.protobuf.BoolValue spam = 64;
+  google.protobuf.BoolValue stickied = 65;
+  google.protobuf.StringValue subreddit = 66;
+  google.protobuf.StringValue subreddit_id = 67;
+  google.protobuf.StringValue subreddit_name_prefixed = 68;
+  google.protobuf.StringValue subreddit_type = 69;
+  google.protobuf.StringValue top_awarded_type = 70;
+  google.protobuf.Int32Value total_awards_received = 71;
+  repeated google.protobuf.StringValue treatment_tags = 72;
+  google.protobuf.StringValue unrepliable_reason = 73;
+  google.protobuf.Int32Value ups = 74;
+  repeated google.protobuf.ListValue user_reports = 75; // array of array of strings :-/
+
+  // more type - for getting more comments
+  google.protobuf.Int32Value count = 76;
+  // name: predefined at 50
+  // id: predefined at 40
+  // parent_id: predefined at 53
+  // depth: predefined at 34
+  repeated google.protobuf.StringValue children = 77;
+
+  // needed for automod tap/compare
+  BanInfo ban_info = 78;
+
+  // PRIVATE - DO NOT SET FOR PUBLIC USE
+  google.protobuf.BoolValue marked_spam = 79;
+
+  google.protobuf.StringValue verdict = 80;
+}

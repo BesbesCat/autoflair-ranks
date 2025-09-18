@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package devvit.ui.effects.v1alpha;
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/ui/effects/v1alpha";
+option java_package = "com.reddit.devvit.ui.effects.v1alpha";
+
+/**
+ * This is the list of active timers.  We could choose to have an effect per timer, but
+ * following realtime's lead, we send the whole list.
+ *
+ * This implies that if the timer disappears from the map, you should cancel it.
+ */
+message SetIntervalsEffect {
+  // hook_id => interval map
+  map<string, IntervalDetails> intervals = 1;
+}
+
+message IntervalDetails {
+  google.protobuf.Duration duration = 1;
+
+  /**
+   * Distinguishes between synchronous and asynchronous events.
+   */
+  google.protobuf.BoolValue async = 3;
+
+  reserved 2;
+}

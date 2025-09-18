@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package devvit.actor.scheduler;
+
+import "google/protobuf/struct.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/actor/scheduler";
+option java_package = "com.reddit.devvit.actor.scheduler";
+
+message ScheduledAction {
+  // Arbitrary string for an Actor's internal use
+  string type = 1;
+  // Arbitrary string for an Actor's internal use (i.e.: JSON serialized data)
+  google.protobuf.Struct data = 2;
+}

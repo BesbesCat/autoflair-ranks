@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package devvit.plugin.redditapi.listings;
+
+import "devvit/plugin/redditapi/common/common_msg.proto";
+import "devvit/plugin/redditapi/listings/listings_msg.proto";
+
+option go_package = "github.snooguts.net/reddit/reddit-devplatform-monorepo/go-common/generated/protos/types/devvit/plugin/redditapi";
+option java_package = "com.reddit.devvit.plugin.redditapi.listings";
+
+// LISTINGS - https://www.reddit.com/dev/api#section_listings
+service Listings {
+  // Home listing
+  //
+  // @see {@link https://www.reddit.com/dev/api#GET_best}
+  rpc Best(GetBestRequest) returns (devvit.plugin.redditapi.common.Listing) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/best.json?after={after}&before={before}&count={count}&limit={limit}&show={show}';
+  }
+
+  // Create a custom listing with the Post IDs provided
+  //
+  // @see {@link https://www.reddit.com/dev/api#GET_by_id_\{names\}}
+  rpc ById(GetByIdRequest) returns (devvit.plugin.redditapi.common.Listing) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/by_id/{post_ids}.json';
+  }
+
+  // Get a comment tree for a Post
+  //
+  // @see {@link https://www.reddit.com/dev/api#GET_comments_\{article\}}
+  // Note: reddit API returns this in an array of listings. Generated code can't handle this.
+  rpc Comments(GetCommentsRequest) returns (ListingResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/comments/{article}.json?comment={comment}&context={context}&depth={depth}&limit={limit}&sort={sort}&threaded={threaded}&truncate={truncate}';
+    option (devvit.plugin.redditapi.common.api_client_config).use_custom_response_parser = true;
+  }
+
+  // Find duplicate posts that reference the same URL as this Post
+  //
+  // @see {@link https://www.reddit.com/dev/api#GET_duplicates_\{article\}}
+  // Note: reddit API returns this in an array of listings. Generated code can't handle this.
+  rpc Duplicates(GetDuplicatesRequest) returns (ListingResponse) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/duplicates/{article}.json?before={before}&after={after}&limit={limit}&sort={sort}&sr={sr}&count={count}&crossposts_only={crossposts_only}&show={show}';
+    option (devvit.plugin.redditapi.common.api_client_config).use_custom_response_parser = true;
+  }
+
+  // Listing with Hot sort
+  //
+  // @see {@link https://www.reddit.com/dev/api#GET_hot}
+  rpc Hot(GetHotRequest) returns (devvit.plugin.redditapi.common.Listing) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/hot.json?after={after}&before={before}&count={count}&limit={limit}&show={show}&g={g}';
+  }
+
+  // Listing with New sort
+  //
+  // @see {@link https://www.reddit.com/dev/api#GET_new}
+  rpc New(GetNewRequest) returns (devvit.plugin.redditapi.common.Listing) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/new.json?after={after}&before={before}&count={count}&limit={limit}&show={show}';
+  }
+
+  // Listing with Rising sort
+  //
+  // @see {@link https://www.reddit.com/dev/api#GET_rising}
+  rpc Rising(GetRisingRequest) returns (devvit.plugin.redditapi.common.Listing) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/rising.json?after={after}&before={before}&count={count}&limit={limit}&show={show}';
+  }
+
+  // Listing with Top or Controversial sort
+  //
+  // @see {@link https://www.reddit.com/dev/api#GET_\{sort\}}
+  rpc Sort(GetSortRequest) returns (devvit.plugin.redditapi.common.Listing) {
+    option (devvit.plugin.redditapi.common.api_client_config).method = 'GET';
+    option (devvit.plugin.redditapi.common.api_client_config).path = '/r/{subreddit}/{sort}.json?after={after}&before={before}&limit={limit}&count={count}&show={show}&t={t}';
+  }
+}

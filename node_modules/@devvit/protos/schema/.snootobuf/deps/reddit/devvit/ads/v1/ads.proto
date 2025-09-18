@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package reddit.devvit.ads.v1;
+
+option go_package = "github.snooguts.net/reddit/devplatform-api/go/grpc/devvit/ads/v1;ads";
+
+enum AppPromoStatus {
+  APS_UNSPECIFIED = 0;
+  APS_REDDIT_PROMOTED = 1;
+}
+
+message AdsConfig {
+  AppPromoStatus promo_status = 1;
+}
