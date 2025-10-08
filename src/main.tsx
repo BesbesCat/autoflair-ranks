@@ -186,44 +186,42 @@ Devvit.addTrigger({
           return;
         }
         const bonusPoints = getBonusPoints(bonus, currentRank, commentBody);
-        //if(bonusPoints) {
-          console.log(`${user}: Bonus Points = ${bonusPoints}`);
-          const opUserID = await context.reddit.getUserById(event.post.authorId);
-          if ((opUserID && opUserID.id != event.author.id) || (bonusPoints === null || bonusPoints === 0)) {
-            const opUsername = opUserID.id;
-            let lock = await context.redis.get(`${opUsername}-${event.author.id}-${event.post.id}`);
-            //if(lock === "1") {
-            //  console.log(`${user}: Bonus duplicate - exiting!`);
-            //  return;
-            //}
-            await context.redis.set(`${opUsername}-${event.author.id}-${event.post.id}`, "1");
-            console.log(`${user}: Bonus OP - ${opUsername}`);
-            let extra = parseInt(await context.redis.get(`${opUsername}-extra`) ?? '0', 10);
-            extra += bonusPoints;
-            await context.redis.set(`${opUsername}-extra`, `${extra}`);
-            const totalKarma = await context.redis.get(`${opUsername}-karma`) ?? "0";
-            let bonusComment = settings['bonus-comment'] as string;
-            if(bonusComment) {
-              const totalScore = parseInt(totalKarma) + extra;
-              const placeholders = {
-                user: opUserID.username,
-                karma: totalKarma,
-                points: bonusPoints,
-                totalExtra: extra,
-                totalScore: totalScore
-              };
-              const replytext = replacePlaceholders(bonusComment, placeholders);
-              const reply = new RichTextBuilder().heading({ level: 3 }, (h) => {
-                h.rawText(replytext);
-              }).horizontalRule();
-              await context.reddit.submitComment({
-                id: event.comment.id,
-                richtext: reply,
-              });
-            }
-            console.log(`${user}: Total Bonus Points = ${extra}`);
+        console.log(`${user}: Bonus Points = ${bonusPoints}`);
+        const opUserID = await context.reddit.getUserById(event.post.authorId);
+        if ((opUserID && opUserID.id != event.author.id) || (bonusPoints === null || bonusPoints === 0)) {
+          const opUsername = opUserID.id;
+          let lock = await context.redis.get(`${opUsername}-${event.author.id}-${event.post.id}`);
+          if(lock === "1") {
+            console.log(`${user}: Bonus duplicate - exiting!`);
+            return;
           }
-        //}
+          await context.redis.set(`${opUsername}-${event.author.id}-${event.post.id}`, "1");
+          console.log(`${user}: Bonus OP - ${opUsername}`);
+          let extra = parseInt(await context.redis.get(`${opUsername}-extra`) ?? '0', 10);
+          extra += bonusPoints;
+          await context.redis.set(`${opUsername}-extra`, `${extra}`);
+          const totalKarma = await context.redis.get(`${opUsername}-karma`) ?? "0";
+          let bonusComment = settings['bonus-comment'] as string;
+          if(bonusComment) {
+            const totalScore = parseInt(totalKarma) + extra;
+            const placeholders = {
+              user: opUserID.username,
+              karma: totalKarma,
+              points: bonusPoints,
+              totalExtra: extra,
+              totalScore: totalScore
+            };
+            const replytext = replacePlaceholders(bonusComment, placeholders);
+            const reply = new RichTextBuilder().heading({ level: 3 }, (h) => {
+              h.rawText(replytext);
+            }).horizontalRule();
+            await context.reddit.submitComment({
+              id: event.comment.id,
+              richtext: reply,
+            });
+          }
+          console.log(`${user}: Total Bonus Points = ${extra}`);
+        }
       }
     }
   },
