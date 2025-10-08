@@ -194,15 +194,19 @@ Devvit.addTrigger({
         } catch (e) {
           return;
         }
-        const bonusPoints = getBonusPoints(bonus, currentRank, commentBody);
+        let bonusPoints = getBonusPoints(bonus, currentRank, commentBody);
         console.log(`${user}: Bonus Points = ${bonusPoints}`);
         const opUserID = await context.reddit.getUserById(event.post.authorId);
-        if ((opUserID && opUserID.id != event.author.id) || (bonusPoints === null || bonusPoints === 0)) {
+        if ((opUserID && opUserID.id != event.author.id && bonusPoints > 0) || (bonusPoints === "info")) {
           const opUsername = opUserID.id;
           let lock = await context.redis.get(`${opUsername}-${event.author.id}-${event.post.id}`);
-          if(lock === "1") {
+
+          if(lock === "1" && bonusPoints != "info") {
             console.log(`${user}: Bonus duplicate - exiting!`);
             return;
+          }
+          if(bonusPoints === "info") {
+            bonusPoints = 0;
           }
           await context.redis.set(`${opUsername}-${event.author.id}-${event.post.id}`, "1");
           console.log(`${user}: Bonus OP - ${opUsername}`);
