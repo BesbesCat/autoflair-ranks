@@ -174,7 +174,16 @@ Devvit.addTrigger({
       }
       const response = await subredditId.getUserFlair({usernames: [user]});
       const userFlairText = response.users[0].flairText ?? '';
-      const currentRank = getCurrRank(ranks, userFlairText);
+      let currentRank = getCurrRank(ranks, userFlairText);
+      const useroObj = await context.reddit.getUserByUsername(user);
+      let permissions = [];
+      if(useroObj) {
+        permissions = await useroObj.getModPermissionsForSubreddit(subreddit);
+        console.log(`${user}: permissions = ${permissions}`);
+      }
+      if (permissions.length > 0) {
+        currentRank = 'mod';
+      }
       if(currentRank) {
         console.log(`${user}: Current Rank - ${currentRank}`);
         let bonusList = settings['bonus-keywords'] as string;
@@ -269,7 +278,7 @@ Devvit.addSettings([
     type: 'paragraph',
     name: 'bonus-keywords',
     label: 'Karma Bonus Keywords',
-    helpText: 'JSON list of keywords and ranks with corresponding points to be added (or substracted if negative) to OP\'s score when used in a comment, e.g. {  "!woo": {"rank1": 0, "rank2": 1,  "!boo": {"rank1": 0, "rank2": -1}',
+    helpText: 'JSON list of keywords and ranks with corresponding points to be added (or substracted if negative) to OP\'s score when used in a comment, e.g. {  "!woo": {"rank1": 0, "rank2": 1, "mod": 10},  "!boo": {"rank1": 0, "rank2": -1, "mod": 10}}',
   },
   {
     type: 'paragraph',
