@@ -1,4 +1,4 @@
-import { Devvit } from '@devvit/public-api';
+import { Devvit, RichTextBuilder } from '@devvit/public-api';
 import {
   escapeRegExp,
   removeRanksFromFlair,
@@ -6,7 +6,9 @@ import {
   replacePlaceholders,
   sleep,
   getRandomDelay,
-  removeOldFromFlair
+  removeOldFromFlair,
+  getCurrRank,
+  getBonusPoints
 } from './utils/functions';
 
 
@@ -15,7 +17,7 @@ Devvit.configure({
 });
 
 Devvit.addTrigger({
-  events: ['PostSubmit', 'PostDelete', 'CommentDelete', 'CommentSubmit'], 
+  events: ['PostSubmit', 'PostDelete', 'CommentDelete', 'CommentCreate'], 
   onEvent: async (event, context) => {
     const subredditId = await context.reddit.getCurrentSubreddit();
     const subreddit = subredditId.name;
@@ -84,7 +86,11 @@ Devvit.addTrigger({
           }
         }
       }
-      console.log(`${user}: Total Karma = ${totalKarma}`);
+      await context.redis.set(`${event.author.id}-karma`, `${totalKarma}`);
+
+      let extra = parseInt(await context.redis.get(`${event.author.id}-extra`) ?? '0', 10);
+      totalKarma += extra;
+      console.log(`${user}: Total Karma + ${extra} = ${totalKarma}`);
 
       const response = await subredditId.getUserFlair({usernames: [user]});
       const userFlairText = response.users[0].flairText ?? '';
@@ -149,6 +155,81 @@ Devvit.addTrigger({
   },
 });
 
+Devvit.addTrigger({
+  events: ['CommentCreate'], 
+  onEvent: async (event, context) => {
+    const subredditId = await context.reddit.getCurrentSubreddit();
+    const subreddit = subredditId.name;
+    const settings = await context.settings.getAll();
+    if(event.comment && event.author && event.post) {
+      const commentBody = event.comment.body;
+      const user = event.author.name;
+      console.log(`${user}: New Comment - ${commentBody}`);
+      let ranksList = settings['ranks-list'] as string;
+      let ranks;
+      try {
+        ranks = JSON.parse(ranksList);
+      } catch (e) {
+        return;
+      }
+      const response = await subredditId.getUserFlair({usernames: [user]});
+      const userFlairText = response.users[0].flairText ?? '';
+      const currentRank = getCurrRank(ranks, userFlairText);
+      if(currentRank) {
+        console.log(`${user}: Current Rank - ${currentRank}`);
+        let bonusList = settings['bonus-keywords'] as string;
+        let bonus;
+        try {
+          bonus = JSON.parse(bonusList);
+          console.log(`${user}: Bonus Keywords - ${bonusList}`);
+        } catch (e) {
+          return;
+        }
+        const bonusPoints = getBonusPoints(bonus, currentRank, commentBody);
+        //if(bonusPoints) {
+          console.log(`${user}: Bonus Points = ${bonusPoints}`);
+          const opUserID = await context.reddit.getUserById(event.post.authorId);
+          if ((opUserID && opUserID.id != event.author.id) || (bonusPoints === null || bonusPoints === 0)) {
+            const opUsername = opUserID.id;
+            let lock = await context.redis.get(`${opUsername}-${event.author.id}-${event.post.id}`);
+            //if(lock === "1") {
+            //  console.log(`${user}: Bonus duplicate - exiting!`);
+            //  return;
+            //}
+            await context.redis.set(`${opUsername}-${event.author.id}-${event.post.id}`, "1");
+            console.log(`${user}: Bonus OP - ${opUsername}`);
+            let extra = parseInt(await context.redis.get(`${opUsername}-extra`) ?? '0', 10);
+            extra += bonusPoints;
+            await context.redis.set(`${opUsername}-extra`, `${extra}`);
+            const totalKarma = await context.redis.get(`${opUsername}-karma`) ?? "0";
+            let bonusComment = settings['bonus-comment'] as string;
+            if(bonusComment) {
+              const totalScore = parseInt(totalKarma) + extra;
+              const placeholders = {
+                user: opUserID.username,
+                karma: totalKarma,
+                points: bonusPoints,
+                totalExtra: extra,
+                totalScore: totalScore
+              };
+              const replytext = replacePlaceholders(bonusComment, placeholders);
+              const reply = new RichTextBuilder().heading({ level: 3 }, (h) => {
+                h.rawText(replytext);
+              }).horizontalRule();
+              await context.reddit.submitComment({
+                id: event.comment.id,
+                richtext: reply,
+              });
+            }
+            console.log(`${user}: Total Bonus Points = ${extra}`);
+          }
+        //}
+      }
+    }
+  },
+});
+
+
 export default Devvit;
 
 
@@ -188,9 +269,21 @@ Devvit.addSettings([
   },
   {
     type: 'paragraph',
+    name: 'bonus-keywords',
+    label: 'Karma Bonus Keywords',
+    helpText: 'JSON list of keywords and ranks with corresponding points to be added (or substracted if negative) to OP\'s score when used in a comment, e.g. {  "!woo": {"rank1": 0, "rank2": 1,  "!boo": {"rank1": 0, "rank2": -1}',
+  },
+  {
+    type: 'paragraph',
+    name: 'bonus-comment',
+    label: 'Karma Bonus Comment',
+    helpText: 'Body of an automated comment to be added when a bonus keyword is used [Supported variables: ${user}, ${points}, ${karma}, ${totalExtra} and ${totalScore}]',
+  },
+  {
+    type: 'paragraph',
     name: 'remove-list',
     label: 'Remove list',
-    helpText: 'JSON list of words to be removed from ranks, e.g. {"oldrank1", "oldrank2"}',
+    helpText: 'JSON array of words to be removed from ranks, e.g. ["oldrank1", "oldrank2"]',
   },
   {
     type: 'paragraph',

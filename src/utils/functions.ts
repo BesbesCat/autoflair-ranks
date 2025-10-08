@@ -1,5 +1,7 @@
 import type { OnValidateHandler } from '@devvit/public-api';
 
+type BonusTable = Record<string, Record<string, number>>;
+
 export function escapeRegExp(str: string) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
@@ -48,4 +50,37 @@ export function getRandomDelay(minSeconds: number, maxSeconds: number): number {
   const minMs = minSeconds * 1000;
   const maxMs = maxSeconds * 1000;
   return Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
+}
+
+export function getCurrRank(ranksList: { [key: string]: number }, userFlairText: string) {
+  let lowestRank = null;
+  let lowestValue = Infinity;
+
+  for (const [rankName, rankValue] of Object.entries(ranksList)) {
+    if (userFlairText.includes(rankName)) {
+      if (rankValue < lowestValue) {
+        lowestValue = rankValue;
+        lowestRank = rankName;
+      }
+    }
+  }
+
+  return lowestRank;
+}
+
+export function getBonusPoints(
+  bonus: BonusTable,
+  currentRank: string,
+  commentBody: string
+) {
+  for (const [keyword, ranks] of Object.entries(bonus)) {
+    if (commentBody.toLowerCase().includes(keyword.toLowerCase())) {
+      if (Object.prototype.hasOwnProperty.call(ranks, currentRank)) {
+        return ranks[currentRank];
+      } else {
+        return null;
+      }
+    }
+  }
+  return null;
 }

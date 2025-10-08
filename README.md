@@ -20,7 +20,17 @@ Ranks are defined in JSON format. Make sure you enter a valid JSON as following:
 
 Where key is the string to be added to user's flair and value is it's corresponding karma score.
 
-**Ranks list:**
+**Karma Bonus Keywords:**
+JSON list of keywords and ranks with corresponding points to be added (or substracted if negative) to OP\'s score when used in a comment
+This feature allows users to award a bonus to be added to OP's score thus helping the user obtain a higher rank.
+Make sure you enter a valid JSON as following:
+
+    { "!woo": {":Noob:": 0, "Beginner": 5, "Advanced": 10, "Expert": 25, "God-Like": 50}, "!boo": {":Noob:": 0, "Beginner": -5, "Advanced": -10, "Expert": -25, "God-Like": -50}, "!info": {}}
+
+**Karma Bonus Comment:**
+Body of an automated comment to be added when a bonus keyword is used [Supported variables: ${user}, ${points}, ${karma}, ${totalExtra} and ${totalScore}]
+
+**Remove list:**
 This is used clean up old ranks from flairs or to set a list of words to be removed entirely from the flair.
 It must be defined as a JSON Array (Not a JSON Object):
 
@@ -44,7 +54,7 @@ If set all subreddit moderators will persistently get this rank. Just enter the 
     **subreddit Settings** > **Look and Feel** > **User Flair** > **Edit flair** > Then Enable **CSS class name** and enter a unique class name
    
  - Any string you define as a rank title will be removed from existing user flairs and cannot be used by users anymore in their flair.
- - When changing a rank title please note that the previous rank name will not be removed from users flairs and the user will need to reset his flair manually.
+ - Adding an empty keyword to Karma Bonus Keywords such as "!info": {} will allow users to query OP's points breakdown.
  - Custom emojis will work with this app.
  - You need to make sure user flair is enabled for your subreddit for this app to work at all.
  - "Exclude moderators" will fully exit once a moderator permission is detected. Allowing each mod to set their custom rank individually.
