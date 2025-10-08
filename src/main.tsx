@@ -207,8 +207,9 @@ Devvit.addTrigger({
           }
           if(bonusPoints === "info") {
             bonusPoints = 0;
+          } else {
+            await context.redis.set(`${opUsername}-${event.author.id}-${event.post.id}`, "1");
           }
-          await context.redis.set(`${opUsername}-${event.author.id}-${event.post.id}`, "1");
           console.log(`${user}: Bonus OP - ${opUsername}`);
           let extra = parseInt(await context.redis.get(`${opUsername}-extra`) ?? '0', 10);
           extra += bonusPoints;
