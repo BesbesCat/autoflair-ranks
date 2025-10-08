@@ -197,7 +197,7 @@ Devvit.addTrigger({
         let bonusPoints = getBonusPoints(bonus, currentRank, commentBody);
         console.log(`${user}: Bonus Points = ${bonusPoints}`);
         const opUserID = await context.reddit.getUserById(event.post.authorId);
-        if ((opUserID && opUserID.id != event.author.id && bonusPoints > 0) || (bonusPoints === "info")) {
+        if ((opUserID && opUserID.id != event.author.id && bonusPoints != 0) || (bonusPoints === "info")) {
           const opUsername = opUserID.id;
           let lock = await context.redis.get(`${opUsername}-${event.author.id}-${event.post.id}`);
 
